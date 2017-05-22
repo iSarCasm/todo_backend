@@ -56,6 +56,7 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_girl'
   gem 'faker'
+  gem 'airborne'
   gem 'shoulda-matchers', git: 'https://github.com/thoughtbot/shoulda-matchers.git', branch: 'rails-5'
   gem 'simplecov', require: false
 end

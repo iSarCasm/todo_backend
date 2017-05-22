@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Users API", type: :request do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryGirl.create(:user_with_projects) }
 
   describe '#show' do
     context 'when logged in' do
@@ -10,9 +10,29 @@ RSpec.describe "Users API", type: :request do
 
         expect(response.status).to eq 200
 
-        expect(json['uid']).to eq user.uid
-        expect(json['name']).to eq user.name
-        expect(json['email']).to eq user.email
+        expect_json(uid: user.uid, name: user.name, email: user.email)
+        expect_json_types(
+          uid: :string,
+          name: :string,
+          email: :string,
+          projects: :array_of_objects
+        )
+        expect_json_types(
+          'projects.*',
+          title: :string,
+          tasks: :array_of_objects
+        )
+        expect_json_types(
+          'projects.*.tasks.*',
+          name: :string,
+          desc: :string,
+          deadline: :string,
+          comments: :array_of_objects
+        )
+        expect_json_types(
+          'projects.*.tasks.*.comments.*',
+          content: :string,
+        )
       end
     end
 
@@ -21,6 +41,8 @@ RSpec.describe "Users API", type: :request do
         get user_path(user.name), params: { format: :json }
 
         expect(response.status).to eq 401
+        expect(json).to include 'errors'
+        expect(json).to_not include 'uid'
       end
     end
   end
