@@ -11,5 +11,6 @@ RSpec.describe User, type: :model do
 
   it { should validate_presence_of :name }
 
-  it { should have_many(:projects) }
+  it { should have_many(:projects).dependent(:destroy) }
+  it { should have_many(:comments).dependent(:destroy) }
 end

@@ -7,6 +7,7 @@ RSpec.describe Project, type: :model do
 
   it { should respond_to :title }
   it { should respond_to :user }
-  
-  it { should have_many(:tasks) }
+
+  it { should belong_to :user }
+  it { should have_many(:tasks).dependent(:destroy) }
 end
