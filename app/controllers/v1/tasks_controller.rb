@@ -11,6 +11,20 @@ module V1
       render json: {'errors': 'Parameter missing'}, status: 422
     end
 
+    def update
+      @task = Task.find(params[:id])
+      if @task.project.user == current_user
+        @task.update!(task_params)
+        render @task
+      else
+        render json: {'errors': 'Forbidden task'}, status: 403
+      end
+    rescue ActionController::ParameterMissing => e
+      render json: {'errors': 'Parameter missing'}, status: 422
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {'errors': 'Record not found'}, status: 403
+    end
+
     private
 
     def task_params

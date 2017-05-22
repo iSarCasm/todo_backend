@@ -86,7 +86,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
           @project_params = { desc: "New long desc" }
         end
 
-        it 'creates a new project' do
+        it 'updates' do
           auth_patch user, project_path(user.projects.first), params: { project: @project_params, format: :json }, headers: v1_headers
 
           expect(response.status).to eq 200
@@ -106,7 +106,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       end
 
       context 'with invalid params' do
-        it 'fails to create a new project' do
+        it 'fails to update the project' do
           auth_patch user, project_path(user.projects.first), params: { format: :json }, headers: v1_headers
 
           expect(response.status).to eq 422
