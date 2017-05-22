@@ -18,7 +18,7 @@ module V1
     private
 
     def project_params
-      params.require(:project).permit(:title)
+      params.require(:project).permit(:title, :desc)
     end
   end
 end

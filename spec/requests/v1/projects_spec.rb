@@ -6,7 +6,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
   describe '#show' do
     context 'when logged in' do
-      it 'returns the list of projects' do
+      it 'returns the project with list of tasks' do
         auth_get user, project_path(user.projects[0]), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 200
@@ -51,11 +51,11 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
     context 'when logged in' do
       context 'with valid params' do
         it 'creates a new project' do
-          project_params = { title: "New project" }
+          project_params = { title: "New project", desc: "Some long desc" }
           auth_post user, projects_path, params: { project: project_params, format: :json }, headers: v1_headers
 
           expect(response.status).to eq 200
-          expect_json(title: "New project")
+          expect_json(title: "New project", desc: "Some long desc")
         end
       end
 
