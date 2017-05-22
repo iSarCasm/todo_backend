@@ -46,6 +46,8 @@ group :development do
   gem "brakeman", require: false
   # Debug
   gem "better_errors"
+  # Guard
+  gem 'guard-rspec', require: false
 end
 
 group :test do
