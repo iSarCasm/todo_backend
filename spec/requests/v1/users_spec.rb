@@ -5,7 +5,7 @@ RSpec.describe "Users API", type: :request, version: :v1 do
 
   describe '#show' do
     context 'when logged in' do
-      it 'returns the list of projects' do
+      it 'returns the user with list of projects' do
         auth_get user, user_path(user.name), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 200

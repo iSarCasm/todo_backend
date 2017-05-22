@@ -1,13 +1,4 @@
 module AuthHelper
-  module Controller
-    def sign_in(user)
-      @request.env["devise.mapping"] = Devise.mappings[:merchant]
-
-      @request.headers.merge! user.create_new_auth_token
-      sign_in user
-    end
-  end
-
   module Request
     %i(get post put patch delete).each do |http_method|
       # auth_get, auth_post, auth_put, auth_patch, auth_delete
