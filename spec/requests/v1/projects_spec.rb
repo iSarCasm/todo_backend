@@ -7,7 +7,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
   describe '#show' do
     context 'when logged in' do
       it 'returns the project with list of tasks' do
-        auth_get user, project_path(user.projects[0]), params: { format: :json }, headers: v1_headers
+        auth_get user, project_path(user.projects.first), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 200
         expect_json_types(
@@ -28,7 +28,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       end
 
       it 'returns 403: Forbidden when accessing others project' do
-        auth_get user, project_path(other_user.projects[0]), params: { format: :json }, headers: v1_headers
+        auth_get user, project_path(other_user.projects.first), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 403
         expect(json).to include 'errors'
@@ -38,7 +38,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        get project_path(user.projects[0]), params: { format: :json }, headers: v1_headers
+        get project_path(user.projects.first), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -71,6 +71,39 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
     context 'when logged out' do
       it 'return 401: Unauthorized' do
         post projects_path, params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 401
+        expect(json).to include 'errors'
+        expect(json).to_not include 'title'
+      end
+    end
+  end
+
+  describe '#update' do
+    context 'when logged in' do
+      context 'with valid params' do
+        it 'creates a new project' do
+          project_params = { desc: "New long desc" }
+          auth_patch user, project_path(user.projects.first), params: {project: project_params, format: :json }, headers: v1_headers
+
+          expect(response.status).to eq 200
+          expect_json(desc: "New long desc")
+          expect_json_types(title: :string, desc: :string)
+        end
+      end
+
+      context 'with invalid params' do
+        it 'fails to create a new project' do
+          auth_patch user, project_path(user.projects.first), params: { format: :json }, headers: v1_headers
+
+          expect(response.status).to eq 422
+        end
+      end
+    end
+
+    context 'when logged out' do
+      it 'return 401: Unauthorized' do
+        patch project_path(user.projects.first), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'

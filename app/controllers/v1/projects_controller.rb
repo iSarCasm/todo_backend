@@ -15,6 +15,14 @@ module V1
       render json: {'errors': 'Record not found'}, status: 403
     end
 
+    def update
+      @project = current_user.projects.find(params[:id])
+      @project.update!(project_params)
+      render @project
+    rescue ActionController::ParameterMissing => e
+      render json: {'errors': 'Parameter missing'}, status: 422
+    end
+
     private
 
     def project_params
