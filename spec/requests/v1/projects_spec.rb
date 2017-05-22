@@ -32,7 +32,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
         expect(response.status).to eq 403
         expect(json).to include 'errors'
-        expect(json).to_not include 'projects'
+        expect(json).to_not include 'title'
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
-        expect(json).to_not include 'projects'
+        expect(json).to_not include 'title'
       end
     end
   end
@@ -74,7 +74,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
-        expect(json).to_not include 'projects'
+        expect(json).to_not include 'title'
       end
     end
   end

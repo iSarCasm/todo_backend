@@ -5,5 +5,6 @@ Rails.application.routes.draw do
     resources :users, only: [:show]
     resources :projects, only: [:show, :create]
     resources :tasks, only: [:create]
+    resources :comments, only: [:create]
   end
 end

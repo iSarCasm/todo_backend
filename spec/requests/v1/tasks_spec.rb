@@ -6,7 +6,7 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
   describe '#create' do
     context 'when logged in' do
       context 'with valid params' do
-        it 'creates a new project' do
+        it 'creates a new task' do
           time = DateTime.now.to_s
           task_params = { name: "New task", desc: "Some long description", deadline: time }
           auth_post user,
@@ -20,10 +20,12 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
       end
 
       context 'with invalid params' do
-        it 'fails to create a new project' do
+        it 'fails to create a new task' do
           auth_post user, tasks_path, params: { format: :json }, headers: v1_headers
 
           expect(response.status).to eq 422
+          expect(json).to include 'errors'
+          expect(json).to_not include 'name'
         end
       end
     end
@@ -34,7 +36,7 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
-        expect(json).to_not include 'projects'
+        expect(json).to_not include 'name'
       end
     end
   end
