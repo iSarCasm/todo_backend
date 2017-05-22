@@ -16,6 +16,20 @@ module V1
       render json: {'errors': 'Parameter missing'}, status: 422
     end
 
+    def update
+      @comment = Comment.find(params[:id])
+      if @comment.task.project.user == current_user
+        @comment.update!(comment_params)
+        render @comment
+      else
+        render json: {'errors': 'Forbidden task'}, status: 403
+      end
+    rescue ActionController::ParameterMissing => e
+      render json: {'errors': 'Parameter missing'}, status: 422
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {'errors': 'Record not found'}, status: 403
+    end
+
     private
 
     def comment_params

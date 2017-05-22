@@ -57,7 +57,7 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
           expect_json_types(name: :string, desc: :string, deadline: :string)
         end
 
-        context 'editing other user`s project' do
+        context 'editing other user`s task' do
           it 'returns 403: Forbidden when accessing others task' do
             auth_patch user, task_path(other_user.projects.first.tasks.first), params: { task: @task_params, format: :json }, headers: v1_headers
 
