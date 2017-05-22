@@ -38,6 +38,8 @@ RSpec.configure do |config|
   config.include AuthHelper::Request, type: :request
 
   config.include Requests::JsonHelpers, type: :request
+
+  config.include Versioning, version: :v1
 end
 
 Shoulda::Matchers.configure do |config|
