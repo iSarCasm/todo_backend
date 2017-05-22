@@ -90,6 +90,10 @@ GEM
     equalizer (0.0.11)
     erubi (1.6.0)
     erubis (2.7.0)
+    factory_girl (4.8.0)
+      activesupport (>= 3.0.0)
+    faker (1.7.3)
+      i18n (~> 0.5)
     ffi (1.9.18)
     flay (2.9.0)
       erubis (~> 2.7.0)
@@ -120,6 +124,9 @@ GEM
     hashie (3.5.5)
     i18n (0.8.1)
     ice_nine (0.11.2)
+    jbuilder (2.6.4)
+      activesupport (>= 3.0.0)
+      multi_json (>= 1.2)
     json (2.1.0)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -138,6 +145,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.10.2)
+    multi_json (1.12.1)
     nenv (0.3.0)
     nio4r (2.0.0)
     nokogiri (1.7.2)
@@ -288,7 +296,10 @@ DEPENDENCIES
   bundler-audit
   database_cleaner
   devise_token_auth
+  factory_girl
+  faker
   guard-rspec
+  jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   omniauth
   pg (~> 0.18)
