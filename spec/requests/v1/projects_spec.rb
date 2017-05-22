@@ -82,13 +82,26 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
   describe '#update' do
     context 'when logged in' do
       context 'with valid params' do
+        before do
+          @project_params = { desc: "New long desc" }
+        end
+
         it 'creates a new project' do
-          project_params = { desc: "New long desc" }
-          auth_patch user, project_path(user.projects.first), params: {project: project_params, format: :json }, headers: v1_headers
+          auth_patch user, project_path(user.projects.first), params: { project: @project_params, format: :json }, headers: v1_headers
 
           expect(response.status).to eq 200
           expect_json(desc: "New long desc")
           expect_json_types(title: :string, desc: :string)
+        end
+
+        context 'editing other user`s project' do
+          it 'returns 403: Forbidden when accessing others project' do
+            auth_patch user, project_path(other_user.projects.first), params: { project: @project_params, format: :json }, headers: v1_headers
+
+            expect(response.status).to eq 403
+            expect(json).to include 'errors'
+            expect(json).to_not include 'title'
+          end
         end
       end
 
