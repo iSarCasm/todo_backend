@@ -30,6 +30,18 @@ module V1
       render json: {'errors': 'Record not found'}, status: 403
     end
 
+    def destroy
+      @comment = Comment.find(params[:id])
+      if @comment.user == current_user || @comment.task.project.user == current_user
+        @comment.destroy
+        render @comment
+      else
+        render json: {'errors': 'Forbidden comment'}, status: 403
+      end
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {'errors': 'Record not found'}, status: 403
+    end
+
     private
 
     def comment_params

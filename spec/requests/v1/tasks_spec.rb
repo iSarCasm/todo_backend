@@ -95,7 +95,7 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
         auth_delete user, task_path(task), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 200
-        expect{Task.find(task.id)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(Task.exists?(task.id)).to be_falsey
       end
 
       it 'does not allow destroying other user`s task' do
@@ -103,13 +103,13 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
         auth_delete user, task_path(other_task), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 403
-        expect(other_task).not_to be_destroyed
+        expect(Task.exists?(other_task.id)).to be_truthy
       end
     end
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        delete project_path(user.projects.first), params: { format: :json }, headers: v1_headers
+        delete task_path(user.projects.first), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
