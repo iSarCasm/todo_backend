@@ -9,7 +9,7 @@ RSpec.describe 'Registrations API', type: :request do
     context 'when logged in' do
       context 'with valid params' do
         it 'destroys user record' do
-          v1_auth_delete user, user_registration_path, params: { password: password}
+          v1_auth_delete user, user_registration_path, params: { password: password }
 
           expect(response.status).to eq 200
           expect(User.exists?(user.id)).to be_falsey
@@ -32,12 +32,9 @@ RSpec.describe 'Registrations API', type: :request do
       end
     end
 
-    context 'when logged out' do
-      it 'return 404: Not Found' do
-        v1_delete user_registration_path
-
-        expect(response.status).to eq 404
-      end
+    it 'when logged out return 404: Not Found' do
+      v1_delete user_registration_path
+      expect_http_error 404
     end
   end
 end

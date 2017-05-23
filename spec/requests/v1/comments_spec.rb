@@ -24,31 +24,20 @@ RSpec.describe "Comments API", type: :request do
 
         context 'with invalid params' do
           it 'returns 422 if no comment params passed' do
-            v1_auth_post user,
-                      comments_path,
-                      params: { task_id: task.id }
-
-            expect(response.status).to eq 422
-            expect(json).to include 'errors'
+            v1_auth_post user, comments_path, params: { task_id: task.id }
+            expect_http_error 422
           end
 
           it 'returns 404 if invalid task id passed' do
             v1_auth_post user, comments_path, params: { task_id: -10, comment: @comment_params }
-
-            expect(response.status).to eq 404
-            expect(json).to include 'errors'
+            expect_http_error 404
           end
         end
 
         context 'editing other user`s comment' do
           it 'returns 403: Forbidden when accessing others task' do
-            v1_auth_post user,
-                      comments_path,
-                      params: { task_id: other_task.id, comment: @comment_params }
-
-            expect(response.status).to eq 403
-            expect(json).to include 'errors'
-            expect(json).to_not include 'name'
+            v1_auth_post user, comments_path, params: { task_id: other_task.id, comment: @comment_params }
+            expect_http_error 403
           end
         end
       end
@@ -57,10 +46,7 @@ RSpec.describe "Comments API", type: :request do
     context 'when logged out' do
       it 'return 401: Unauthorized' do
         v1_post comments_path
-
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'content'
+        expect_http_error 401
       end
     end
   end
@@ -81,18 +67,13 @@ RSpec.describe "Comments API", type: :request do
 
         it 'returns 404 if wrong id given' do
           v1_auth_patch user, comment_path(-10), params: { comment: @comment_params  }
-
-          expect(response.status).to eq 404
-          expect(json).to include 'errors'
+          expect_http_error 404
         end
 
         context 'editing other user`s comment' do
           it 'returns 403: Forbidden when accessing others task' do
             v1_auth_patch user, comment_path(other_comment), params: { comment: @comment_params  }
-
-            expect(response.status).to eq 403
-            expect(json).to include 'errors'
-            expect(json).to_not include 'name'
+            expect_http_error 403
           end
         end
       end
@@ -100,8 +81,7 @@ RSpec.describe "Comments API", type: :request do
       context 'with invalid params' do
         it 'fails to update the comment' do
           v1_auth_patch user, comment_path(comment)
-
-          expect(response.status).to eq 422
+          expect_http_error 422
         end
       end
     end
@@ -109,10 +89,7 @@ RSpec.describe "Comments API", type: :request do
     context 'when logged out' do
       it 'return 401: Unauthorized' do
         v1_patch comment_path(comment)
-
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'name'
+        expect_http_error 401
       end
     end
   end
@@ -129,9 +106,7 @@ RSpec.describe "Comments API", type: :request do
 
       it 'returns 404 if wrong id given' do
         v1_auth_delete user, comment_path(-10)
-
-        expect(response.status).to eq 404
-        expect(json).to include 'errors'
+        expect_http_error 404
       end
 
       context 'placed on other`s task' do
@@ -142,7 +117,7 @@ RSpec.describe "Comments API", type: :request do
 
           v1_auth_delete user, comment_path(comment)
 
-          expect(response.status).to eq 403
+          expect_http_error 403
           expect(Comment.exists?(comment.id)).to be_truthy
         end
       end
@@ -165,10 +140,7 @@ RSpec.describe "Comments API", type: :request do
     context 'when logged out' do
       it 'return 401: Unauthorized' do
         v1_delete comment_path(user.projects.first.tasks.first.comments.first)
-
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'title'
+        expect_http_error 401
       end
     end
   end

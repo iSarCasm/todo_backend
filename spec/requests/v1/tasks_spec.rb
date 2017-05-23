@@ -10,7 +10,7 @@ RSpec.describe "Tasks API", type: :request do
         it 'creates a new task' do
           time = DateTime.now.to_s
           task_params = { name: "New task", desc: "Some long description", deadline: time }
-          
+
           v1_auth_post user,
                     tasks_path,
                     params: { project_id: user.projects.first.id, task: task_params}
@@ -23,18 +23,12 @@ RSpec.describe "Tasks API", type: :request do
       context 'with invalid params' do
         it 'fails to create a new task without params' do
           v1_auth_post user, tasks_path
-
-          expect(response.status).to eq 422
-          expect(json).to include 'errors'
-          expect(json).to_not include 'name'
+          expect_http_error 422
         end
 
         it 'fails to create a new task without task params' do
           v1_auth_post user, tasks_path, params: { project_id: user.projects.first.id }
-
-          expect(response.status).to eq 422
-          expect(json).to include 'errors'
-          expect(json).to_not include 'name'
+          expect_http_error 422
         end
       end
     end
@@ -42,10 +36,7 @@ RSpec.describe "Tasks API", type: :request do
     context 'when logged out' do
       it 'return 401: Unauthorized' do
         v1_post tasks_path
-
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'name'
+        expect_http_error 401
       end
     end
   end
@@ -67,18 +58,13 @@ RSpec.describe "Tasks API", type: :request do
 
         it 'returns 404: Not Found if wrong id specified' do
           v1_auth_patch user, task_path(-10), params: { task: @task_params }
-
-          expect(response.status).to eq 404
-          expect(json).to include 'errors'
+          expect_http_error 404
         end
 
         context 'editing other user`s task' do
           it 'returns 403: Forbidden when accessing others task' do
             v1_auth_patch user, task_path(other_user.projects.first.tasks.first), params: { task: @task_params }
-
-            expect(response.status).to eq 403
-            expect(json).to include 'errors'
-            expect(json).to_not include 'name'
+            expect_http_error 403
           end
         end
       end
@@ -86,8 +72,7 @@ RSpec.describe "Tasks API", type: :request do
       context 'with invalid params' do
         it 'fails to update the task' do
           v1_auth_patch user, task_path(user.projects.first.tasks.first)
-
-          expect(response.status).to eq 422
+          expect_http_error 422
         end
       end
     end
@@ -98,9 +83,7 @@ RSpec.describe "Tasks API", type: :request do
 
         v1_patch task_path(task)
 
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'name'
+        expect_http_error 401
       end
     end
   end
@@ -118,9 +101,7 @@ RSpec.describe "Tasks API", type: :request do
 
       it 'returns 404: Not Found if wrong id specified' do
         v1_auth_delete user, task_path(-10)
-
-        expect(response.status).to eq 404
-        expect(json).to include 'errors'
+        expect_http_error 404
       end
 
       it 'does not allow destroying other user`s task' do
@@ -128,7 +109,7 @@ RSpec.describe "Tasks API", type: :request do
 
         v1_auth_delete user, task_path(other_task)
 
-        expect(response.status).to eq 403
+        expect_http_error 403
         expect(Task.exists?(other_task.id)).to be_truthy
       end
     end
@@ -139,9 +120,7 @@ RSpec.describe "Tasks API", type: :request do
 
         v1_delete task_path(task)
 
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'title'
+        expect_http_error 401
       end
     end
   end
@@ -159,9 +138,7 @@ RSpec.describe "Tasks API", type: :request do
 
       it 'returns 404: Not Found if wrong id specified' do
         v1_auth_patch user, finish_task_path(-10)
-
-        expect(response.status).to eq 404
-        expect(json).to include 'errors'
+        expect_http_error 404
       end
 
       it 'does not allow finishing other user`s task' do
@@ -169,7 +146,7 @@ RSpec.describe "Tasks API", type: :request do
 
         v1_auth_patch user, finish_task_path(other_task)
 
-        expect(response.status).to eq 403
+        expect_http_error 403
         expect(other_user.projects.first.tasks.first).to be_in_progess
       end
     end
@@ -177,10 +154,7 @@ RSpec.describe "Tasks API", type: :request do
     context 'when logged out' do
       it 'return 401: Unauthorized' do
         v1_patch finish_task_path(user.projects.first.tasks.first)
-
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'title'
+        expect_http_error 401
       end
     end
   end
@@ -199,9 +173,7 @@ RSpec.describe "Tasks API", type: :request do
 
       it 'returns 404: Not Found if wrong id specified' do
         v1_auth_patch user, to_progress_task_path(-10)
-
-        expect(response.status).to eq 404
-        expect(json).to include 'errors'
+        expect_http_error 404
       end
 
       it 'does not allow finishing other user`s task' do
@@ -210,7 +182,7 @@ RSpec.describe "Tasks API", type: :request do
 
         v1_auth_patch user, to_progress_task_path(other_task)
 
-        expect(response.status).to eq 403
+        expect_http_error 403
         expect(other_user.projects.first.tasks.first).to be_finished
       end
     end
@@ -218,10 +190,7 @@ RSpec.describe "Tasks API", type: :request do
     context 'when logged out' do
       it 'return 401: Unauthorized' do
         v1_patch finish_task_path(user.projects.first.tasks.first)
-
-        expect(response.status).to eq 401
-        expect(json).to include 'errors'
-        expect(json).to_not include 'title'
+        expect_http_error 401
       end
     end
   end

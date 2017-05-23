@@ -37,6 +37,7 @@ RSpec.configure do |config|
 
   config.include ApiHelper::Request, type: :request
   config.include Requests::JsonHelpers, type: :request
+  config.include ErrorExpectations, type: :request
 end
 
 Shoulda::Matchers.configure do |config|
