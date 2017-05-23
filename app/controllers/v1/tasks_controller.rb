@@ -25,6 +25,18 @@ module V1
       render json: {'errors': 'Record not found'}, status: 403
     end
 
+    def destroy
+      @task = Task.find(params[:id])
+      if @task.project.user == current_user
+        @task.destroy
+        render @task
+      else
+        render json: {'errors': 'Forbidden task'}, status: 403
+      end
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {'errors': 'Record not found'}, status: 403
+    end
+
     private
 
     def task_params

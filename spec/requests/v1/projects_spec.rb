@@ -132,14 +132,15 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
         auth_delete user, project_path(project), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 200
-        expect{Project.find(project.id)}.to raise_error(ActiveRecord::RecordNotFound)
+        expect(Project.exists?(project.id)).to be_falsey
       end
 
       it 'does not allow destroying other user`s project' do
-        auth_delete user, project_path(other_user.projects.first), params: { format: :json }, headers: v1_headers
+        other_project = other_user.projects.first
+        auth_delete user, project_path(other_project), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 403
-        expect(Project.find(other_user.projects.first.id)).not_to be_destroyed
+        expect(Project.exists?(other_project.id)).to be_truthy
       end
     end
 

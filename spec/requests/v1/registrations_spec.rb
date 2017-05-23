@@ -12,7 +12,7 @@ RSpec.describe 'Registrations API', version: :v1, type: :request do
           auth_delete user, user_registration_path, params: { password: password, format: :json}, headers: v1_headers
 
           expect(response.status).to eq 200
-          expect{User.find(user.id)}.to raise_error(ActiveRecord::RecordNotFound)
+          expect(User.exists?(user.id)).to be_falsey
         end
       end
 
@@ -21,13 +21,13 @@ RSpec.describe 'Registrations API', version: :v1, type: :request do
           auth_delete user, user_registration_path, params: { password: wrong_password, format: :json }, headers: v1_headers
 
           expect(response.status).to eq 403
-          expect(User.find(user.id)).to eq user
+          expect(User.exists?(user.id)).to be_truthy
         end
 
         it 'leaves user as it is if no password passed' do
           auth_delete user, user_registration_path, params: { format: :json }, headers: v1_headers
 
-          expect(User.find(user.id)).to eq user
+          expect(User.exists?(user.id)).to be_truthy
         end
       end
     end
