@@ -1,9 +1,10 @@
 FactoryGirl.define do
   factory :user do
-    name                { Faker::Name.first_name }
-    sequence(:email)    { |n| n.to_s + Faker::Internet.email }
-    password            { Faker::Internet.password(8) }
-    confirmed_at        { Time.zone.now }
+    name                  { Faker::Name.first_name }
+    sequence(:email)      { |n| n.to_s + Faker::Internet.email }
+    password              { Faker::Internet.password(8) }
+    password_confirmation { "#{password}" }
+    confirmed_at          { Time.zone.now }
 
     factory :user_with_projects do
       after(:create) do |user, evaluator|

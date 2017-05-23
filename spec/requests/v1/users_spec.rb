@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "Users API", type: :request, version: :v1 do
   let(:user) { FactoryGirl.create(:user_with_projects) }
-  let(:password) { '12345' }
+  let(:password) { user.password }
+  let(:wrong_password) { '1234512345' }
 
   describe '#show' do
     context 'when logged in' do
@@ -52,8 +53,6 @@ RSpec.describe "Users API", type: :request, version: :v1 do
     context 'when logged in' do
       context 'with valid params' do
         it 'destroys user record' do
-          allow_any_instance_of(Overrides::RegistrationsController).to receive(:password_confirmed?).and_return(true)
-
           auth_delete user, user_registration_path, params: { password: password, format: :json}, headers: v1_headers
 
           expect(response.status).to eq 200
@@ -63,9 +62,7 @@ RSpec.describe "Users API", type: :request, version: :v1 do
 
       context 'with invalid params' do
         it 'leaves user as it is if wrong password passed' do
-          allow_any_instance_of(Overrides::RegistrationsController).to receive(:password_confirmed?).and_return(false)
-
-          auth_delete user, user_registration_path, params: { password: password, format: :json }, headers: v1_headers
+          auth_delete user, user_registration_path, params: { password: wrong_password, format: :json }, headers: v1_headers
 
           expect(response.status).to eq 403
           expect(User.find(user.id)).to eq user
