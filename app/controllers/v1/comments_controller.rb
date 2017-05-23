@@ -13,7 +13,7 @@ module V1
     rescue ActionController::ParameterMissing => e
       render json: {'errors': 'Parameter missing'}, status: 422
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Parameter missing'}, status: 422
+      render json: {'errors': 'Parameter missing'}, status: 404
     end
 
     def update
@@ -27,7 +27,7 @@ module V1
     rescue ActionController::ParameterMissing => e
       render json: {'errors': 'Parameter missing'}, status: 422
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 403
+      render json: {'errors': 'Record not found'}, status: 404
     end
 
     def destroy
@@ -39,7 +39,7 @@ module V1
         render json: {'errors': 'Forbidden comment'}, status: 403
       end
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 403
+      render json: {'errors': 'Record not found'}, status: 404
     end
 
     private

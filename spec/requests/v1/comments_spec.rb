@@ -23,6 +23,25 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
           expect_json(content: "Some comment about something")
         end
 
+        context 'with invalid params' do
+          it 'returns 422 if no comment params passed' do
+            auth_post user,
+                      comments_path,
+                      params: { task_id: task.id, format: :json},
+                      headers: v1_headers
+
+            expect(response.status).to eq 422
+            expect(json).to include 'errors'
+          end
+
+          it 'returns 404 if invalid task id passed' do
+            auth_post user, comments_path, params: { task_id: -10, comment: @comment_params, format: :json}, headers: v1_headers
+
+            expect(response.status).to eq 404
+            expect(json).to include 'errors'
+          end
+        end
+
         context 'editing other user`s comment' do
           it 'returns 403: Forbidden when accessing others task' do
             auth_post user,
@@ -34,16 +53,6 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
             expect(json).to include 'errors'
             expect(json).to_not include 'name'
           end
-        end
-      end
-
-      context 'with invalid params' do
-        it 'fails to create a new comment' do
-          auth_post user, comments_path, params: { format: :json }, headers: v1_headers
-
-          expect(response.status).to eq 422
-          expect(json).to include 'errors'
-          expect(json).to_not include 'content'
         end
       end
     end
@@ -71,6 +80,13 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
           expect(response.status).to eq 200
           expect_json(content: "New content")
+        end
+
+        it 'returns 404 if wrong id given' do
+          auth_patch user, comment_path(-10), params: { comment: @comment_params, format: :json }, headers: v1_headers
+
+          expect(response.status).to eq 404
+          expect(json).to include 'errors'
         end
 
         context 'editing other user`s comment' do
@@ -114,6 +130,13 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
         expect(Comment.exists?(comment.id)).to be_falsey
       end
 
+      it 'returns 404 if wrong id given' do
+        auth_delete user, comment_path(-10), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 404
+        expect(json).to include 'errors'
+      end
+
       context 'placed on other`s task' do
         it 'does not allow destroying other user`s comments' do
           other_task = FactoryGirl.create :task
@@ -133,7 +156,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
           user_project = FactoryGirl.create :project, user: current_user
           user_task = FactoryGirl.create :task, project: user_project
           other_user_comment = FactoryGirl.create :comment, task: user_task
-          
+
           auth_delete current_user, comment_path(other_user_comment), params: { format: :json }, headers: v1_headers
 
           expect(response.status).to eq 200

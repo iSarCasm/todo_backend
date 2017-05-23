@@ -21,8 +21,16 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
       end
 
       context 'with invalid params' do
-        it 'fails to create a new task' do
+        it 'fails to create a new task without params' do
           auth_post user, tasks_path, params: { format: :json }, headers: v1_headers
+
+          expect(response.status).to eq 422
+          expect(json).to include 'errors'
+          expect(json).to_not include 'name'
+        end
+
+        it 'fails to create a new task without task params' do
+          auth_post user, tasks_path, params: { project_id: user.projects.first.id, format: :json }, headers: v1_headers
 
           expect(response.status).to eq 422
           expect(json).to include 'errors'
@@ -55,6 +63,13 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
           expect(response.status).to eq 200
           expect_json(name: "New task name")
           expect_json_types(name: :string, desc: :string, deadline: :string)
+        end
+
+        it 'returns 404: Not Found if wrong id specified' do
+          auth_patch user, task_path(-10), params: { task: @task_params, format: :json }, headers: v1_headers
+
+          expect(response.status).to eq 404
+          expect(json).to include 'errors'
         end
 
         context 'editing other user`s task' do
@@ -101,6 +116,13 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
         expect(Task.exists?(task.id)).to be_falsey
       end
 
+      it 'returns 404: Not Found if wrong id specified' do
+        auth_delete user, task_path(-10), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 404
+        expect(json).to include 'errors'
+      end
+
       it 'does not allow destroying other user`s task' do
         other_task = other_user.projects.first.tasks.first
 
@@ -134,6 +156,13 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
         expect(user.projects.first.tasks.first).to be_finished
       end
 
+      it 'returns 404: Not Found if wrong id specified' do
+        auth_patch user, finish_task_path(-10), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 404
+        expect(json).to include 'errors'
+      end
+
       it 'does not allow finishing other user`s task' do
         other_task = other_user.projects.first.tasks.first
 
@@ -165,6 +194,13 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
 
         expect(response.status).to eq 200
         expect(user.projects.first.tasks.first).to be_in_progess
+      end
+
+      it 'returns 404: Not Found if wrong id specified' do
+        auth_patch user, to_progress_task_path(-10), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 404
+        expect(json).to include 'errors'
       end
 
       it 'does not allow finishing other user`s task' do

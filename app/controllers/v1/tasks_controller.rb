@@ -22,7 +22,7 @@ module V1
     rescue ActionController::ParameterMissing => e
       render json: {'errors': 'Parameter missing'}, status: 422
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 403
+      render json: {'errors': 'Record not found'}, status: 404
     end
 
     def destroy
@@ -34,7 +34,7 @@ module V1
         render json: {'errors': 'Forbidden task'}, status: 403
       end
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 403
+      render json: {'errors': 'Record not found'}, status: 404
     end
 
     def finish
@@ -45,10 +45,8 @@ module V1
       else
         render json: {'errors': 'Forbidden task'}, status: 403
       end
-    rescue ActionController::ParameterMissing => e
-      render json: {'errors': 'Parameter missing'}, status: 422
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 403
+      render json: {'errors': 'Record not found'}, status: 404
     end
 
     def to_progress
@@ -59,10 +57,8 @@ module V1
       else
         render json: {'errors': 'Forbidden task'}, status: 403
       end
-    rescue ActionController::ParameterMissing => e
-      render json: {'errors': 'Parameter missing'}, status: 422
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 403
+      render json: {'errors': 'Record not found'}, status: 404
     end
 
     private
