@@ -25,6 +25,14 @@ module V1
       render json: {'errors': 'Record not found'}, status: 403
     end
 
+    def destroy
+      @project = current_user.projects.find(params[:id])
+      @project.destroy
+      render @project
+    rescue ActiveRecord::RecordNotFound => e
+      render json: {'errors': 'Record not found'}, status: 403
+    end
+
     private
 
     def project_params

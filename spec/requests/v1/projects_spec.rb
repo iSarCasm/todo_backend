@@ -124,4 +124,33 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       end
     end
   end
+
+  describe '#destroy' do
+    context 'when logged in' do
+      it 'destroys user`s project' do
+        project = user.projects.first
+        auth_delete user, project_path(project), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 200
+        expect{Project.find(project.id)}.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it 'does not allow destroying other user`s project' do
+        auth_delete user, project_path(other_user.projects.first), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 403
+        expect(Project.find(other_user.projects.first.id)).not_to be_destroyed
+      end
+    end
+
+    context 'when logged out' do
+      it 'return 401: Unauthorized' do
+        delete project_path(user.projects.first), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 401
+        expect(json).to include 'errors'
+        expect(json).to_not include 'title'
+      end
+    end
+  end
 end
