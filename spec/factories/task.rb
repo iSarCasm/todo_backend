@@ -6,7 +6,7 @@ FactoryGirl.define do
     project
 
     factory :task_with_comments do
-      after(:create) do |task, evaluator|
+      after(:build) do |task, evaluator|
         create_list(:comment, 3, task: task)
       end
     end
