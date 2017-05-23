@@ -19,7 +19,8 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
           name: :string,
           desc: :string,
           deadline: :string,
-          comments: :array_of_objects
+          comments: :array_of_objects,
+          finished: :boolean,
         )
         expect_json_types(
           'tasks.*.comments.*',

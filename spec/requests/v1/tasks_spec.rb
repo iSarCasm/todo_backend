@@ -79,7 +79,9 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        patch task_path(user.projects.first.tasks.first), params: { format: :json }, headers: v1_headers
+        task = user.projects.first.tasks.first
+
+        patch task_path(task), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -92,6 +94,7 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
     context 'when logged in' do
       it 'destroys user`s task' do
         task = user.projects.first.tasks.first
+
         auth_delete user, task_path(task), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 200
@@ -100,6 +103,7 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
 
       it 'does not allow destroying other user`s task' do
         other_task = other_user.projects.first.tasks.first
+
         auth_delete user, task_path(other_task), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 403
@@ -109,7 +113,74 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        delete task_path(user.projects.first), params: { format: :json }, headers: v1_headers
+        task = user.projects.first.tasks.first
+        delete task_path(task), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 401
+        expect(json).to include 'errors'
+        expect(json).to_not include 'title'
+      end
+    end
+  end
+
+  describe '#finish' do
+    context 'when logged in' do
+      it 'finishes user`s task' do
+        task = user.projects.first.tasks.first
+
+        auth_patch user, finish_task_path(task), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 200
+        expect(user.projects.first.tasks.first).to be_finished
+      end
+
+      it 'does not allow finishing other user`s task' do
+        other_task = other_user.projects.first.tasks.first
+
+        auth_patch user, finish_task_path(other_task), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 403
+        expect(other_user.projects.first.tasks.first).to be_in_progess
+      end
+    end
+
+    context 'when logged out' do
+      it 'return 401: Unauthorized' do
+        patch finish_task_path(user.projects.first.tasks.first), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 401
+        expect(json).to include 'errors'
+        expect(json).to_not include 'title'
+      end
+    end
+  end
+
+  describe '#finish' do
+    context 'when logged in' do
+      it 'finishes user`s task' do
+        task = user.projects.first.tasks.first
+        task.finish!
+
+        auth_patch user, to_progress_task_path(task), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 200
+        expect(user.projects.first.tasks.first).to be_in_progess
+      end
+
+      it 'does not allow finishing other user`s task' do
+        other_task = other_user.projects.first.tasks.first
+        other_task.finish!
+
+        auth_patch user, to_progress_task_path(other_task), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 403
+        expect(other_user.projects.first.tasks.first).to be_finished
+      end
+    end
+
+    context 'when logged out' do
+      it 'return 401: Unauthorized' do
+        patch finish_task_path(user.projects.first.tasks.first), params: { format: :json }, headers: v1_headers
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'

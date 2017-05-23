@@ -13,4 +13,8 @@ RSpec.describe Task, type: :model do
 
   it { should belong_to :project }
   it { should have_many(:comments).dependent(:destroy) }
+
+  it { should have_state :in_progess }
+  it { should transition_from(:in_progess).to(:finished).on_event(:finish) }
+  it { should transition_from(:finished).to(:in_progess).on_event(:to_progress) }
 end
