@@ -155,4 +155,70 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       end
     end
   end
+
+  describe '#archive' do
+    context 'when logged in' do
+      it 'archives user`s project' do
+        project = user.projects.first
+
+        auth_patch user, archive_project_path(project), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 200
+        expect(user.projects.first).to be_in_acrhived
+      end
+
+      it 'does not allow archiving other user`s project' do
+        other_project = other_user.projects.first
+
+        auth_patch user, archive_project_path(other_project), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 403
+        expect(other_user.projects.first).to be_in_active
+      end
+    end
+
+    context 'when logged out' do
+      it 'return 401: Unauthorized' do
+        patch archive_project_path(user.projects.first), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 401
+        expect(json).to include 'errors'
+        expect(json).to_not include 'title'
+      end
+    end
+  end
+
+  describe '#to_progress' do
+    context 'when logged in' do
+      it 'activates user`s project' do
+        project = user.projects.first
+        project.archive!
+
+        auth_patch user, activate_project_path(project), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 200
+        expect(user.projects.first).to be_in_active
+      end
+
+      it 'does not allow activatin other user`s project' do
+        other_project = other_user.projects.first
+        other_project.archive!
+
+        auth_patch user, activate_project_path(other_project), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 403
+        expect(other_user.projects.first).to be_in_acrhived
+      end
+    end
+
+    context 'when logged out' do
+      it 'return 401: Unauthorized' do
+        patch activate_project_path(user.projects.first), params: { format: :json }, headers: v1_headers
+
+        expect(response.status).to eq 401
+        expect(json).to include 'errors'
+        expect(json).to_not include 'title'
+      end
+    end
+  end
 end

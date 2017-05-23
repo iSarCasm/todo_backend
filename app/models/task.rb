@@ -3,7 +3,6 @@ class Task < ApplicationRecord
   has_many :comments, dependent: :destroy
 
   include AASM
-
   aasm do
     state :in_progess, initial: true
     state :finished

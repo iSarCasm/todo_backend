@@ -155,7 +155,7 @@ RSpec.describe "Tasks API", type: :request, version: :v1 do
     end
   end
 
-  describe '#finish' do
+  describe '#to_progress' do
     context 'when logged in' do
       it 'finishes user`s task' do
         task = user.projects.first.tasks.first
