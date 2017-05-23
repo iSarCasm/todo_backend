@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Comments API", type: :request, version: :v1 do
+RSpec.describe "Comments API", type: :request do
   let(:user) { FactoryGirl.create(:user_with_projects) }
   let(:task) { user.projects.first.tasks.first }
   let(:comment) { task.comments.first }
@@ -14,10 +14,9 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
         before { @comment_params = { content: "Some comment about something" } }
 
         it 'creates a new comment' do
-          auth_post user,
+          v1_auth_post user,
                     comments_path,
-                    params: { task_id: task.id, comment: @comment_params },
-                    headers: v1_headers
+                    params: { task_id: task.id, comment: @comment_params }
 
           expect(response.status).to eq 200
           expect_json(content: "Some comment about something")
@@ -25,17 +24,16 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
         context 'with invalid params' do
           it 'returns 422 if no comment params passed' do
-            auth_post user,
+            v1_auth_post user,
                       comments_path,
-                      params: { task_id: task.id },
-                      headers: v1_headers
+                      params: { task_id: task.id }
 
             expect(response.status).to eq 422
             expect(json).to include 'errors'
           end
 
           it 'returns 404 if invalid task id passed' do
-            auth_post user, comments_path, params: { task_id: -10, comment: @comment_params }, headers: v1_headers
+            v1_auth_post user, comments_path, params: { task_id: -10, comment: @comment_params }
 
             expect(response.status).to eq 404
             expect(json).to include 'errors'
@@ -44,10 +42,9 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
         context 'editing other user`s comment' do
           it 'returns 403: Forbidden when accessing others task' do
-            auth_post user,
+            v1_auth_post user,
                       comments_path,
-                      params: { task_id: other_task.id, comment: @comment_params },
-                      headers: v1_headers
+                      params: { task_id: other_task.id, comment: @comment_params }
 
             expect(response.status).to eq 403
             expect(json).to include 'errors'
@@ -59,7 +56,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        post comments_path, headers: v1_headers
+        v1_post comments_path
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -76,14 +73,14 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
         end
 
         it 'updates the comment' do
-          auth_patch user, comment_path(comment), params: { comment: @comment_params  }, headers: v1_headers
+          v1_auth_patch user, comment_path(comment), params: { comment: @comment_params  }
 
           expect(response.status).to eq 200
           expect_json(content: "New content")
         end
 
         it 'returns 404 if wrong id given' do
-          auth_patch user, comment_path(-10), params: { comment: @comment_params  }, headers: v1_headers
+          v1_auth_patch user, comment_path(-10), params: { comment: @comment_params  }
 
           expect(response.status).to eq 404
           expect(json).to include 'errors'
@@ -91,7 +88,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
         context 'editing other user`s comment' do
           it 'returns 403: Forbidden when accessing others task' do
-            auth_patch user, comment_path(other_comment), params: { comment: @comment_params  }, headers: v1_headers
+            v1_auth_patch user, comment_path(other_comment), params: { comment: @comment_params  }
 
             expect(response.status).to eq 403
             expect(json).to include 'errors'
@@ -102,7 +99,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
       context 'with invalid params' do
         it 'fails to update the comment' do
-          auth_patch user, comment_path(comment), headers: v1_headers
+          v1_auth_patch user, comment_path(comment)
 
           expect(response.status).to eq 422
         end
@@ -111,7 +108,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        patch comment_path(comment), headers: v1_headers
+        v1_patch comment_path(comment)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -124,14 +121,14 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
     context 'when logged in' do
       it 'destroys user`s comments' do
         comment = FactoryGirl.create :comment, user: user
-        auth_delete user, comment_path(comment), headers: v1_headers
+        v1_auth_delete user, comment_path(comment)
 
         expect(response.status).to eq 200
         expect(Comment.exists?(comment.id)).to be_falsey
       end
 
       it 'returns 404 if wrong id given' do
-        auth_delete user, comment_path(-10), headers: v1_headers
+        v1_auth_delete user, comment_path(-10)
 
         expect(response.status).to eq 404
         expect(json).to include 'errors'
@@ -143,7 +140,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
           comment = FactoryGirl.create :comment, user: other_user
           comment.task = other_task
 
-          auth_delete user, comment_path(comment), headers: v1_headers
+          v1_auth_delete user, comment_path(comment)
 
           expect(response.status).to eq 403
           expect(Comment.exists?(comment.id)).to be_truthy
@@ -157,7 +154,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
           user_task = FactoryGirl.create :task, project: user_project
           other_user_comment = FactoryGirl.create :comment, task: user_task
 
-          auth_delete current_user, comment_path(other_user_comment), headers: v1_headers
+          v1_auth_delete current_user, comment_path(other_user_comment)
 
           expect(response.status).to eq 200
           expect(Comment.exists?(other_user_comment.id)).to be_falsey
@@ -167,7 +164,7 @@ RSpec.describe "Comments API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        delete comment_path(user.projects.first.tasks.first.comments.first), headers: v1_headers
+        v1_delete comment_path(user.projects.first.tasks.first.comments.first)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'

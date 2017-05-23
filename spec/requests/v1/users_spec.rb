@@ -1,12 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe "Users API", type: :request, version: :v1 do
+RSpec.describe "Users API", type: :request do
   let(:user) { FactoryGirl.create(:user_with_projects) }
 
   describe '#show' do
     context 'when logged in' do
       it 'returns the user with list of projects' do
-        auth_get user, user_path(user.name), headers: v1_headers
+        v1_auth_get user, user_path(user.name)
 
         expect(response.status).to eq 200
 
@@ -40,7 +40,7 @@ RSpec.describe "Users API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        get user_path(user.name), headers: v1_headers
+        v1_get user_path(user.name)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'

@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe "Projects API", type: :request, version: :v1 do
+RSpec.describe "Projects API", type: :request do
   let(:user) { FactoryGirl.create(:user_with_projects) }
   let(:other_user) { FactoryGirl.create(:user_with_projects) }
 
   describe '#show' do
     context 'when logged in' do
       it 'returns the project with list of tasks' do
-        auth_get user, project_path(user.projects.first), headers: v1_headers
+        v1_auth_get user, project_path(user.projects.first)
 
         expect(response.status).to eq 200
         expect_json_types(
@@ -29,7 +29,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       end
 
       it 'returns 403: Forbidden when accessing others project' do
-        auth_get user, project_path(other_user.projects.first), headers: v1_headers
+        v1_auth_get user, project_path(other_user.projects.first)
 
         expect(response.status).to eq 403
         expect(json).to include 'errors'
@@ -39,7 +39,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        get project_path(user.projects.first), headers: v1_headers
+        v1_get project_path(user.projects.first)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -53,7 +53,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       context 'with valid params' do
         it 'creates a new project' do
           project_params = { title: "New project", desc: "Some long desc" }
-          auth_post user, projects_path, params: { project: project_params }, headers: v1_headers
+          v1_auth_post user, projects_path, params: { project: project_params }
 
           expect(response.status).to eq 200
           expect_json(title: "New project", desc: "Some long desc")
@@ -62,7 +62,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
       context 'with invalid params' do
         it 'fails to create a new project' do
-          auth_post user, projects_path, headers: v1_headers
+          v1_auth_post user, projects_path
 
           expect(response.status).to eq 422
         end
@@ -71,7 +71,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        post projects_path, headers: v1_headers
+        v1_post projects_path
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -88,7 +88,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
         end
 
         it 'updates' do
-          auth_patch user, project_path(user.projects.first), params: { project: @project_params }, headers: v1_headers
+          v1_auth_patch user, project_path(user.projects.first), params: { project: @project_params }
 
           expect(response.status).to eq 200
           expect_json(desc: "New long desc")
@@ -97,7 +97,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
         context 'editing other user`s project' do
           it 'returns 403: Forbidden when accessing others project' do
-            auth_patch user, project_path(other_user.projects.first), params: { project: @project_params }, headers: v1_headers
+            v1_auth_patch user, project_path(other_user.projects.first), params: { project: @project_params }
 
             expect(response.status).to eq 403
             expect(json).to include 'errors'
@@ -108,7 +108,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
       context 'with invalid params' do
         it 'fails to update the project' do
-          auth_patch user, project_path(user.projects.first), headers: v1_headers
+          v1_auth_patch user, project_path(user.projects.first)
 
           expect(response.status).to eq 422
         end
@@ -117,7 +117,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        patch project_path(user.projects.first), headers: v1_headers
+        v1_patch project_path(user.projects.first)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -130,7 +130,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
     context 'when logged in' do
       it 'destroys user`s project' do
         project = user.projects.first
-        auth_delete user, project_path(project), headers: v1_headers
+        v1_auth_delete user, project_path(project)
 
         expect(response.status).to eq 200
         expect(Project.exists?(project.id)).to be_falsey
@@ -138,7 +138,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
       it 'does not allow destroying other user`s project' do
         other_project = other_user.projects.first
-        auth_delete user, project_path(other_project), headers: v1_headers
+        v1_auth_delete user, project_path(other_project)
 
         expect(response.status).to eq 403
         expect(Project.exists?(other_project.id)).to be_truthy
@@ -147,7 +147,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        delete project_path(user.projects.first), headers: v1_headers
+        v1_delete project_path(user.projects.first)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -161,7 +161,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       it 'archives user`s project' do
         project = user.projects.first
 
-        auth_patch user, archive_project_path(project), headers: v1_headers
+        v1_auth_patch user, archive_project_path(project)
 
         expect(response.status).to eq 200
         expect(user.projects.first).to be_in_acrhived
@@ -170,7 +170,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
       it 'does not allow archiving other user`s project' do
         other_project = other_user.projects.first
 
-        auth_patch user, archive_project_path(other_project), headers: v1_headers
+        v1_auth_patch user, archive_project_path(other_project)
 
         expect(response.status).to eq 403
         expect(other_user.projects.first).to be_in_active
@@ -179,7 +179,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        patch archive_project_path(user.projects.first), headers: v1_headers
+        v1_patch archive_project_path(user.projects.first)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
@@ -194,7 +194,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
         project = user.projects.first
         project.archive!
 
-        auth_patch user, activate_project_path(project), headers: v1_headers
+        v1_auth_patch user, activate_project_path(project)
 
         expect(response.status).to eq 200
         expect(user.projects.first).to be_in_active
@@ -204,7 +204,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
         other_project = other_user.projects.first
         other_project.archive!
 
-        auth_patch user, activate_project_path(other_project), headers: v1_headers
+        v1_auth_patch user, activate_project_path(other_project)
 
         expect(response.status).to eq 403
         expect(other_user.projects.first).to be_in_acrhived
@@ -213,7 +213,7 @@ RSpec.describe "Projects API", type: :request, version: :v1 do
 
     context 'when logged out' do
       it 'return 401: Unauthorized' do
-        patch activate_project_path(user.projects.first), headers: v1_headers
+        v1_patch activate_project_path(user.projects.first)
 
         expect(response.status).to eq 401
         expect(json).to include 'errors'
