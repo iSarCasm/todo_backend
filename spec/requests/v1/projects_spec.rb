@@ -28,9 +28,9 @@ RSpec.describe "Projects API", type: :request do
         )
       end
 
-      it 'returns 403: Forbidden when accessing others project' do
+      it 'returns 404: Not Found when accessing others project' do
         v1_auth_get user, project_path(other_user.projects.first)
-        expect_http_error 403
+        expect_http_error 404
       end
     end
 
@@ -86,9 +86,9 @@ RSpec.describe "Projects API", type: :request do
         end
 
         context 'editing other user`s project' do
-          it 'returns 403: Forbidden when accessing others project' do
+          it 'returns 404: Not Found when accessing others project' do
             v1_auth_patch user, project_path(other_user.projects.first), params: { project: @project_params }
-            expect_http_error 403
+            expect_http_error 404
           end
         end
       end
@@ -123,7 +123,7 @@ RSpec.describe "Projects API", type: :request do
         other_project = other_user.projects.first
         v1_auth_delete user, project_path(other_project)
 
-        expect_http_error 403
+        expect_http_error 404
         expect(Project.exists?(other_project.id)).to be_truthy
       end
     end
@@ -152,7 +152,7 @@ RSpec.describe "Projects API", type: :request do
 
         v1_auth_patch user, archive_project_path(other_project)
 
-        expect_http_error 403
+        expect_http_error 404
         expect(other_user.projects.first).to be_in_active
       end
     end
@@ -183,7 +183,7 @@ RSpec.describe "Projects API", type: :request do
 
         v1_auth_patch user, activate_project_path(other_project)
 
-        expect_http_error 403
+        expect_http_error 404
         expect(other_user.projects.first).to be_in_acrhived
       end
     end

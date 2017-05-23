@@ -1,70 +1,52 @@
 module V1
   class TasksController < ApplicationController
     before_action :authenticate_user!
+    before_action :set_task, except: [:create]
 
     def create
       @task = current_user.projects.find(params[:project_id]).tasks.create(task_params)
       render @task
     rescue ActionController::ParameterMissing => e
-      render json: {'errors': 'Parameter missing'}, status: 422
+      render_error 422
     rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Parameter missing'}, status: 422
+      render_error 404
     end
 
     def update
-      @task = Task.find(params[:id])
-      if @task.project.user == current_user
-        @task.update!(task_params)
-        render @task
-      else
-        render json: {'errors': 'Forbidden task'}, status: 403
-      end
+      @task.update!(task_params)
+      render @task
     rescue ActionController::ParameterMissing => e
-      render json: {'errors': 'Parameter missing'}, status: 422
-    rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 404
+      render_error 422
     end
 
     def destroy
-      @task = Task.find(params[:id])
-      if @task.project.user == current_user
-        @task.destroy
-        render @task
-      else
-        render json: {'errors': 'Forbidden task'}, status: 403
-      end
-    rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 404
+      @task.destroy
+      render @task
     end
 
     def finish
-      @task = Task.find(params[:id])
-      if @task.project.user == current_user
-        @task.finish!
-        render @task
-      else
-        render json: {'errors': 'Forbidden task'}, status: 403
-      end
-    rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 404
+      @task.finish!
+      render @task
     end
 
     def to_progress
-      @task = Task.find(params[:id])
-      if @task.project.user == current_user
-        @task.to_progress!
-        render @task
-      else
-        render json: {'errors': 'Forbidden task'}, status: 403
-      end
-    rescue ActiveRecord::RecordNotFound => e
-      render json: {'errors': 'Record not found'}, status: 404
+      @task.to_progress!
+      render @task
     end
 
     private
 
     def task_params
       params.require(:task).permit(:name, :desc, :deadline)
+    end
+
+    def set_task
+      @task = Task.find(params[:id])
+      raise ForbiddenResource if @task.project.user != current_user
+    rescue ActiveRecord::RecordNotFound => e
+      render_error 404
+    rescue ForbiddenResource => e
+      render_error 403, resource: 'task'
     end
   end
 end

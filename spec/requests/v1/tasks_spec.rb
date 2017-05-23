@@ -23,7 +23,7 @@ RSpec.describe "Tasks API", type: :request do
       context 'with invalid params' do
         it 'fails to create a new task without params' do
           v1_auth_post user, tasks_path
-          expect_http_error 422
+          expect_http_error 404
         end
 
         it 'fails to create a new task without task params' do

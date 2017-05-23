@@ -1,0 +1,1 @@
+class ForbiddenResource < StandardError; end
