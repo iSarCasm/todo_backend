@@ -11,5 +11,11 @@ FactoryGirl.define do
         create_list(:project_with_tasks, 3, user: user)
       end
     end
+
+    factory :user_with_comments do
+      after(:create) do |user, evaluator|
+        create_list(:comment, 3, user: user)
+      end
+    end
   end
 end

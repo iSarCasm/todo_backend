@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe "Comments Destroy API", type: :request do
   let(:user) { FactoryGirl.create(:user_with_projects) }
-  let(:task) { user.projects.first.tasks.first }
+  let(:task) { user.tasks.first }
   let(:comment) { task.comments.first }
   let(:other_user) { FactoryGirl.create(:user_with_projects) }
-  let(:other_task) { other_user.projects.first.tasks.first }
+  let(:other_task) { other_user.tasks.first }
   let(:other_comment) { other_task.comments.first }
 
   context 'when logged in' do
@@ -37,10 +37,8 @@ RSpec.describe "Comments Destroy API", type: :request do
 
     context 'placed on my task' do
       it 'allow destroying other user`s comments' do
-        current_user = FactoryGirl.create :user
-        user_project = FactoryGirl.create :project, user: current_user
-        user_task = FactoryGirl.create :task, project: user_project
-        other_user_comment = FactoryGirl.create :comment, task: user_task
+        current_user = FactoryGirl.create :user_with_projects
+        other_user_comment = FactoryGirl.create :comment, task: current_user.tasks.first
 
         v1_auth_delete current_user, comment_path(other_user_comment)
 
@@ -52,7 +50,8 @@ RSpec.describe "Comments Destroy API", type: :request do
 
   context 'when logged out' do
     it 'return 401: Unauthorized' do
-      v1_delete comment_path(user.projects.first.tasks.first.comments.first)
+      user = FactoryGirl.create :user_with_comments
+      v1_delete comment_path(user.comments.first)
       expect_http_error 401
     end
   end

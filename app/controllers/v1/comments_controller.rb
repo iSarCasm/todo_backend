@@ -13,7 +13,7 @@ module V1
     end
 
     def update
-      if @comment.task.project.user == current_user
+      if @comment.owner == current_user
         @comment.update!(comment_params)
         render @comment
       else

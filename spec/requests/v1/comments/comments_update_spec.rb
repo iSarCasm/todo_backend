@@ -1,12 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Comments Update API", type: :request do
-  let(:user) { FactoryGirl.create(:user_with_projects) }
-  let(:task) { user.projects.first.tasks.first }
-  let(:comment) { task.comments.first }
-  let(:other_user) { FactoryGirl.create(:user_with_projects) }
-  let(:other_task) { other_user.projects.first.tasks.first }
-  let(:other_comment) { other_task.comments.first }
+  let(:user) { FactoryGirl.create(:user_with_comments) }
+  let(:comment) { user.comments.first }
+  let(:other_user) { FactoryGirl.create(:user_with_comments) }
+  let(:other_comment) { other_user.comments.first }
 
   context 'when logged in' do
     context 'with valid params' do
@@ -27,7 +25,7 @@ RSpec.describe "Comments Update API", type: :request do
       end
 
       context 'editing other user`s comment' do
-        it 'returns 403: Forbidden when accessing others task' do
+        it 'returns 403: Forbidden when accessing others comment' do
           v1_auth_patch user, comment_path(other_comment), params: { comment: @comment_params  }
           expect_http_error 403
         end

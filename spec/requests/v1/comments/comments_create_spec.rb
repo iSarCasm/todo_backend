@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Comments Create API", type: :request do
   let(:user) { FactoryGirl.create :user_with_projects }
-  let(:task) { user.projects.first.tasks.first }
+  let(:task) { user.tasks.first }
   let(:other_task) {  FactoryGirl.create :task }
 
   context 'when logged in' do
