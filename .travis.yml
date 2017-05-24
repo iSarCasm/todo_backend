@@ -3,16 +3,18 @@ rvm:
   - 2.3.1
 addons:
   postgresql: "9.4"
+  code_climate:
+    repo_token: '2996985c22587a0cb648d4f71d9f2dd27da266729f7bd9a37127717eee3430ca'
 before_install: gem install bundler -v 1.10.6
 
 services:
   - postgresql
-
-env:
-  CODECLIMATE_REPO_TOKEN: '2996985c22587a0cb648d4f71d9f2dd27da266729f7bd9a37127717eee3430ca'
 
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - cp config/database.yml.travis config/database.yml
   - "bundle exec rake db:drop RAILS_ENV=test"
   - "bundle exec rake db:setup RAILS_ENV=test"
+
+after_success:
+- bundle exec codeclimate-test-reporter
