@@ -17,6 +17,7 @@ RSpec.describe "Comments Update API", type: :request do
 
         expect(response.status).to eq 200
         expect_json(content: "New content")
+        expect_json_types comment_json
       end
 
       it 'returns 404 if wrong id given' do

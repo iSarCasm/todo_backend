@@ -10,8 +10,9 @@ RSpec.describe "Tasks Finish API", type: :request do
 
       v1_auth_patch user, finish_task_path(task)
 
-      expect(response.status).to eq 200
       expect(user.tasks.first).to be_finished
+      expect(response.status).to eq 200
+      expect_json_types task_json
     end
 
     it 'returns 404: Not Found if wrong id specified' do

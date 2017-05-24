@@ -16,6 +16,7 @@ RSpec.describe "Comments Create API", type: :request do
 
         expect(response.status).to eq 200
         expect_json(content: "Some comment about something")
+        expect_json_types comment_json
       end
 
       context 'with invalid params' do

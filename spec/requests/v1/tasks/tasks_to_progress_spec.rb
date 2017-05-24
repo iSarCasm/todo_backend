@@ -11,8 +11,9 @@ RSpec.describe "Tasks ToProgress API", type: :request do
 
       v1_auth_patch user, to_progress_task_path(task)
 
-      expect(response.status).to eq 200
       expect(user.tasks.first).to be_in_progess
+      expect(response.status).to eq 200
+      expect_json_types task_json
     end
 
     it 'returns 404: Not Found if wrong id specified' do

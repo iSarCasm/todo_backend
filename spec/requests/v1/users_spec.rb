@@ -11,31 +11,10 @@ RSpec.describe "Users API", type: :request do
         expect(response.status).to eq 200
 
         expect_json(uid: user.uid, name: user.name, email: user.email)
-        expect_json_types(
-          uid: :string,
-          name: :string,
-          email: :string,
-          projects: :array_of_objects
-        )
-        expect_json_types(
-          'projects.*',
-          title: :string,
-          tasks: :array_of_objects,
-          in_active: :boolean
-        )
-        expect_json_types(
-          'projects.*.tasks.*',
-          name: :string,
-          desc: :string,
-          deadline: :string,
-          position: :integer,
-          finished: :boolean,
-          comments: :array_of_objects,
-        )
-        expect_json_types(
-          'projects.*.tasks.*.comments.*',
-          content: :string,
-        )
+        expect_json_types(user_json)
+        expect_json_types('projects.*', project_json)
+        expect_json_types('projects.*.tasks.*', task_json)
+        expect_json_types('projects.*.tasks.*.comments.*', comment_json)
       end
     end
 

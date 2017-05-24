@@ -10,8 +10,9 @@ RSpec.describe "Tasks Destroy API", type: :request do
 
       v1_auth_delete user, task_path(task)
 
-      expect(response.status).to eq 200
       expect(Task.exists?(task.id)).to be_falsey
+      expect(response.status).to eq 200
+      expect_json_types task_json
     end
 
     it 'returns 404: Not Found if wrong id specified' do

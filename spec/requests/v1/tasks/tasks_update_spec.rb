@@ -16,15 +16,8 @@ RSpec.describe "Tasks Update API", type: :request do
         v1_auth_patch user, task_path(task), params: { task: @task_params }
 
         expect(response.status).to eq 200
-        expect_json(name: "New task name", position: 3)
-        expect_json_types(
-          name: :string,
-          desc: :string,
-          deadline: :string,
-          position: :integer,
-          finished: :boolean,
-          comments: :array_of_objects,
-        )
+        expect_json name: "New task name", position: 3
+        expect_json_types task_json
       end
 
       it 'returns 404: Not Found if wrong id specified' do

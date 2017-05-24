@@ -10,8 +10,9 @@ RSpec.describe "Projects Archive API", type: :request do
 
       v1_auth_patch user, archive_project_path(project)
 
-      expect(response.status).to eq 200
       expect(user.projects.first).to be_in_acrhived
+      expect(response.status).to eq 200
+      expect_json_types project_json
     end
 
     it 'does not allow archiving other user`s project' do

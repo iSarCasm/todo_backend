@@ -15,7 +15,7 @@ RSpec.describe "Projects Update API", type: :request do
 
         expect(response.status).to eq 200
         expect_json(desc: "New long desc")
-        expect_json_types(title: :string, desc: :string)
+        expect_json_types project_json
       end
 
       context 'editing other user`s project' do

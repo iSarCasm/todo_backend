@@ -12,6 +12,7 @@ RSpec.describe "Projects Create API", type: :request do
 
         expect(response.status).to eq 200
         expect_json(title: "New project", desc: "Some long desc")
+        expect_json_types project_json
       end
     end
 

@@ -9,22 +9,9 @@ RSpec.describe "Projects Show API", type: :request do
       v1_auth_get user, project_path(user.projects.first)
 
       expect(response.status).to eq 200
-      expect_json_types(
-        title: :string,
-        tasks: :array_of_objects
-      )
-      expect_json_types(
-        'tasks.*',
-        name: :string,
-        desc: :string,
-        deadline: :string,
-        comments: :array_of_objects,
-        finished: :boolean,
-      )
-      expect_json_types(
-        'tasks.*.comments.*',
-        content: :string,
-      )
+      expect_json_types project_json
+      expect_json_types 'tasks.*', task_json
+      expect_json_types 'tasks.*.comments.*', comment_json
     end
 
     it 'returns 404: Not Found when accessing others project' do

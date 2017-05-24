@@ -16,6 +16,7 @@ RSpec.describe "Tasks Create API", type: :request do
 
         expect(response.status).to eq 200
         expect_json(name: "New task", desc: "Some long description", deadline: time)
+        expect_json_types task_json
       end
     end
 

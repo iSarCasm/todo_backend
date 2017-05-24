@@ -9,8 +9,9 @@ RSpec.describe "Projects Destroy API", type: :request do
       project = user.projects.first
       v1_auth_delete user, project_path(project)
 
-      expect(response.status).to eq 200
       expect(Project.exists?(project.id)).to be_falsey
+      expect(response.status).to eq 200
+      expect_json_types project_json
     end
 
     it 'does not allow destroying other user`s project' do
