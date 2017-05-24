@@ -6,11 +6,11 @@ module V1
     def create
       @comment = get_task.comments.create(comment_params)
       render @comment
-    rescue ForbiddenResource => e
+    rescue ForbiddenResource
       render_error 403, resource: 'comment'
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       render_error 422
-    rescue ActiveRecord::RecordNotFound => e
+    rescue ActiveRecord::RecordNotFound
       render_error 404
     end
 
@@ -21,7 +21,7 @@ module V1
       else
         render_error 403, resource: 'comment'
       end
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       render_error 422
     end
 
@@ -42,7 +42,7 @@ module V1
 
     def set_comment
       @comment = Comment.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
+    rescue ActiveRecord::RecordNotFound
       render_error 404
     end
 

@@ -24,7 +24,7 @@ RSpec.describe "Tasks Finish API", type: :request do
 
       v1_auth_patch user, finish_task_path(other_task)
 
-      expect_http_error 403
+      expect_http_error 404
       expect(other_user.projects.first.tasks.first).to be_in_progess
     end
   end

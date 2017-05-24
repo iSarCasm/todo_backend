@@ -24,9 +24,9 @@ RSpec.describe "Tasks Update API", type: :request do
       end
 
       context 'editing other user`s task' do
-        it 'returns 403: Forbidden when accessing others task' do
+        it 'returns 404: Not Found when accessing others task' do
           v1_auth_patch user, task_path(other_user.projects.first.tasks.first), params: { task: @task_params }
-          expect_http_error 403
+          expect_http_error 404
         end
       end
     end

@@ -6,7 +6,7 @@ module V1
     def create
       @project = current_user.projects.create(project_params)
       render @project
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       render_error 422
     end
 
@@ -16,7 +16,7 @@ module V1
     def update
       @project.update!(project_params)
       render @project
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       render_error 422
     end
 
@@ -43,7 +43,7 @@ module V1
 
     def set_project
       @project = current_user.projects.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
+    rescue ActiveRecord::RecordNotFound
       render_error 404
     end
   end

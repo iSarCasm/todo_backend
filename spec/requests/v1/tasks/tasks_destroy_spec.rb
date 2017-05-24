@@ -24,7 +24,7 @@ RSpec.describe "Tasks Destroy API", type: :request do
 
       v1_auth_delete user, task_path(other_task)
 
-      expect_http_error 403
+      expect_http_error 404
       expect(Task.exists?(other_task.id)).to be_truthy
     end
   end
