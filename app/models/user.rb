@@ -9,4 +9,8 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
 
   validates :name, presence: true
+
+  def tasks
+    Task.joins(:project).where(projects: {user_id: id})
+  end
 end

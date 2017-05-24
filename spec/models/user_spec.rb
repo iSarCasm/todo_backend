@@ -13,4 +13,17 @@ RSpec.describe User, type: :model do
 
   it { should have_many(:projects).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
+
+  describe '#tasks' do
+    it 'returns all tasks from all user projects' do
+      user = FactoryGirl.create :user
+      user_project_1 = FactoryGirl.create :project, user: user
+      user_project_2 = FactoryGirl.create :project, user: user
+      user_tasks_1 = FactoryGirl.create_list :task, 3, project: user_project_1
+      user_tasks_2 = FactoryGirl.create_list :task, 2, project: user_project_2
+      other_tasks = FactoryGirl.create_list :task, 7
+
+      expect(user.tasks.count).to eq (user_tasks_1 + user_tasks_2).count
+    end
+  end
 end
