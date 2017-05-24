@@ -34,5 +34,14 @@ module V1
         content: :string
       }
     end
+
+    def stats_json
+      {
+        users: :integer,
+        projects: :integer,
+        tasks: :integer,
+        comments: :integer
+      }
+    end
   end
 end

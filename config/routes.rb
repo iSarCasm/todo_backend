@@ -4,6 +4,8 @@ Rails.application.routes.draw do
       registrations:  'overrides/registrations'
     }
 
+    resources :stats, only: [:index]
+
     resources :users, only: [:show]
 
     resources :projects, only: [:show, :create, :update, :destroy] do
