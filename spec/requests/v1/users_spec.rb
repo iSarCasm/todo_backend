@@ -28,8 +28,9 @@ RSpec.describe "Users API", type: :request do
           name: :string,
           desc: :string,
           deadline: :string,
+          position: :integer,
+          finished: :boolean,
           comments: :array_of_objects,
-          finished: :boolean
         )
         expect_json_types(
           'projects.*.tasks.*.comments.*',

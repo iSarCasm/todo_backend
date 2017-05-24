@@ -37,7 +37,7 @@ module V1
     private
 
     def task_params
-      params.require(:task).permit(:name, :desc, :deadline)
+      params.require(:task).permit(:name, :desc, :deadline, :position)
     end
 
     def set_task
