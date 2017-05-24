@@ -17,4 +17,15 @@ RSpec.describe Task, type: :model do
   it { should have_state :in_progess }
   it { should transition_from(:in_progess).to(:finished).on_event(:finish) }
   it { should transition_from(:finished).to(:in_progess).on_event(:to_progress) }
+
+  describe '#user, #owner' do
+    it 'return User who owns task`s project' do
+      user = FactoryGirl.create :user
+      project = FactoryGirl.create :project, user: user
+      task = FactoryGirl.create :task, project: project
+
+      expect(task.user).to eq user
+      expect(task.owner).to eq user
+    end
+  end
 end

@@ -24,7 +24,7 @@ module V1
     end
 
     def destroy
-      if @comment.user == current_user || @comment.task.project.user == current_user
+      if @comment.owner == current_user || @comment.task_owner == current_user
         @comment.destroy
         render @comment
       else

@@ -15,4 +15,9 @@ class Task < ApplicationRecord
       transitions from: :finished, to: :in_progess
     end
   end
+
+  def user
+    project.user
+  end
+  alias_method :owner, :user
 end
