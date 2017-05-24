@@ -6,7 +6,7 @@ RSpec.describe "Tasks Destroy API", type: :request do
 
   context 'when logged in' do
     it 'destroys user`s task' do
-      task = user.projects.first.tasks.first
+      task = user.tasks.first
 
       v1_auth_delete user, task_path(task)
 
@@ -20,7 +20,7 @@ RSpec.describe "Tasks Destroy API", type: :request do
     end
 
     it 'does not allow destroying other user`s task' do
-      other_task = other_user.projects.first.tasks.first
+      other_task = other_user.tasks.first
 
       v1_auth_delete user, task_path(other_task)
 
@@ -31,7 +31,7 @@ RSpec.describe "Tasks Destroy API", type: :request do
 
   context 'when logged out' do
     it 'return 401: Unauthorized' do
-      task = user.projects.first.tasks.first
+      task = user.tasks.first
 
       v1_delete task_path(task)
 

@@ -6,13 +6,13 @@ RSpec.describe "Tasks ToProgress API", type: :request do
 
   context 'when logged in' do
     it 'finishes user`s task' do
-      task = user.projects.first.tasks.first
+      task = user.tasks.first
       task.finish!
 
       v1_auth_patch user, to_progress_task_path(task)
 
       expect(response.status).to eq 200
-      expect(user.projects.first.tasks.first).to be_in_progess
+      expect(user.tasks.first).to be_in_progess
     end
 
     it 'returns 404: Not Found if wrong id specified' do
@@ -21,19 +21,19 @@ RSpec.describe "Tasks ToProgress API", type: :request do
     end
 
     it 'does not allow finishing other user`s task' do
-      other_task = other_user.projects.first.tasks.first
+      other_task = other_user.tasks.first
       other_task.finish!
 
       v1_auth_patch user, to_progress_task_path(other_task)
 
       expect_http_error 404
-      expect(other_user.projects.first.tasks.first).to be_finished
+      expect(other_user.tasks.first).to be_finished
     end
   end
 
   context 'when logged out' do
     it 'return 401: Unauthorized' do
-      v1_patch finish_task_path(user.projects.first.tasks.first)
+      v1_patch finish_task_path(user.tasks.first)
       expect_http_error 401
     end
   end

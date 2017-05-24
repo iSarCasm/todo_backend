@@ -11,7 +11,7 @@ RSpec.describe "Tasks Update API", type: :request do
       end
 
       it 'updates the task' do
-        v1_auth_patch user, task_path(user.projects.first.tasks.first), params: { task: @task_params }
+        v1_auth_patch user, task_path(user.tasks.first), params: { task: @task_params }
 
         expect(response.status).to eq 200
         expect_json(name: "New task name")
@@ -25,7 +25,7 @@ RSpec.describe "Tasks Update API", type: :request do
 
       context 'editing other user`s task' do
         it 'returns 404: Not Found when accessing others task' do
-          v1_auth_patch user, task_path(other_user.projects.first.tasks.first), params: { task: @task_params }
+          v1_auth_patch user, task_path(other_user.tasks.first), params: { task: @task_params }
           expect_http_error 404
         end
       end
@@ -33,7 +33,7 @@ RSpec.describe "Tasks Update API", type: :request do
 
     context 'with invalid params' do
       it 'fails to update the task' do
-        v1_auth_patch user, task_path(user.projects.first.tasks.first)
+        v1_auth_patch user, task_path(user.tasks.first)
         expect_http_error 422
       end
     end
@@ -41,7 +41,7 @@ RSpec.describe "Tasks Update API", type: :request do
 
   context 'when logged out' do
     it 'return 401: Unauthorized' do
-      task = user.projects.first.tasks.first
+      task = user.tasks.first
 
       v1_patch task_path(task)
 
