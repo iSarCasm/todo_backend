@@ -6,8 +6,6 @@ module V1
     def create
       @comment = get_task.comments.create(comment_params)
       render @comment
-    rescue ForbiddenResource
-      render_error 403, resource: 'comment'
     rescue ActionController::ParameterMissing
       render_error 422
     rescue ActiveRecord::RecordNotFound
@@ -47,9 +45,7 @@ module V1
     end
 
     def get_task
-      task = Task.find(params[:task_id])
-      raise ForbiddenResource if task.project.user != current_user
-      task
+      current_user.tasks.find(params[:task_id])
     end
   end
 end

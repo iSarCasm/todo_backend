@@ -30,10 +30,10 @@ RSpec.describe "Comments Create API", type: :request do
         end
       end
 
-      context 'editing other user`s comment' do
-        it 'returns 403: Forbidden when accessing others task' do
+      context 'adding to other user`s task' do
+        it 'returns 404: Forbidden when accessing others task' do
           v1_auth_post user, comments_path, params: { task_id: other_task.id, comment: @comment_params }
-          expect_http_error 403
+          expect_http_error 404
         end
       end
     end

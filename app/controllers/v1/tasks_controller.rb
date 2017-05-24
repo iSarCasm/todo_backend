@@ -4,7 +4,7 @@ module V1
     before_action :set_task, except: [:create]
 
     def create
-      @task = current_user.projects.find(params[:project_id]).tasks.create(task_params)
+      @task = get_project.tasks.create(task_params)
       render @task
     rescue ActionController::ParameterMissing
       render_error 422
@@ -44,6 +44,10 @@ module V1
       @task = current_user.tasks.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render_error 404
+    end
+
+    def get_project
+      current_user.projects.find(params[:project_id])
     end
   end
 end
