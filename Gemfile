@@ -33,6 +33,8 @@ gem 'omniauth'
 gem 'carrierwave', '~> 1.0'
 gem "mini_magick"
 
+gem 'apipie-rails'
+
 group :development, :test do
   # Debug
   gem 'pry-byebug'
