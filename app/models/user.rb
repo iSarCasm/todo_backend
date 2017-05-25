@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
 
   validates :name, presence: true
 
+  mount_uploader :avatar, AvatarUploader
+
   def tasks
     Task.joins(:project).where(projects: {user_id: id})
   end

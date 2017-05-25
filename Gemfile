@@ -30,6 +30,9 @@ gem 'aasm'
 gem 'devise_token_auth'
 gem 'omniauth'
 
+gem 'carrierwave', '~> 1.0'
+gem "mini_magick"
+
 group :development, :test do
   # Debug
   gem 'pry-byebug'
