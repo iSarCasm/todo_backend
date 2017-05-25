@@ -5,6 +5,8 @@ module V1
 
     def create
       @comment = get_task.comments.create(comment_params)
+      @comment.user = current_user
+      @comment.save!
       render @comment
     rescue ActionController::ParameterMissing
       render_error 422
@@ -25,7 +27,7 @@ module V1
 
     def destroy
       if @comment.owner == current_user || @comment.task_owner == current_user
-        @comment.destroy
+        @comment.destroy!
         render @comment
       else
         render_error 403, resource: 'comment'

@@ -15,7 +15,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :shared_projects, only: [:show, :create, :destroy]
+    resources :shared_projects, only: [:show, :create, :destroy], param: :project_id
 
     resources :tasks, only: [:create, :update, :destroy] do
       member do

@@ -4,7 +4,7 @@ module V1
     before_action :set_project, except: [:create]
 
     def create
-      @project = current_user.projects.create(project_params)
+      @project = current_user.projects.create!(project_params)
       render @project
     rescue ActionController::ParameterMissing
       render_error 422
@@ -21,7 +21,7 @@ module V1
     end
 
     def destroy
-      @project.destroy
+      @project.destroy!
       render @project
     end
 

@@ -12,6 +12,7 @@ module V1
 
     def project_json
       {
+        id: :integer,
         title: :string,
         desc: :string,
         tasks: :array_of_objects,
@@ -21,6 +22,7 @@ module V1
 
     def task_json
       {
+        id: :integer,
         name: :string,
         desc: :string,
         deadline: :string,
@@ -32,6 +34,7 @@ module V1
 
     def comment_json
       {
+        id: :integer,
         content: :string,
         attachments: :array_of_objects
       }

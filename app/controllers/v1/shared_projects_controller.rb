@@ -4,7 +4,7 @@ module V1
     before_action :set_project, only: [:create]
 
     def show
-      @shared_project = SharedProject.find(params[:id])
+      @shared_project = SharedProject.find_by!(project_id: params[:project_id])
     end
 
     def create
@@ -15,7 +15,7 @@ module V1
     end
 
     def destroy
-      @shared_project = current_user.shared_projects.find(params[:id])
+      @shared_project = current_user.shared_projects.find_by!(project_id: params[:project_id])
       @shared_project.destroy!
       render @shared_project
     rescue ActiveRecord::RecordNotFound

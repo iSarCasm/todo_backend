@@ -4,7 +4,7 @@ module V1
     before_action :set_task, except: [:create]
 
     def create
-      @task = get_project.tasks.create(task_params)
+      @task = get_project.tasks.create!(task_params)
       render @task
     rescue ActionController::ParameterMissing
       render_error 422
@@ -20,7 +20,7 @@ module V1
     end
 
     def destroy
-      @task.destroy
+      @task.destroy!
       render @task
     end
 
