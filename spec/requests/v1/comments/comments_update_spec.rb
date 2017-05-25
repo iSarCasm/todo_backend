@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Comments Update API", type: :request do
   let(:user) { FactoryGirl.create(:user_with_comments) }
   let(:comment) { user.comments.first }
+  let(:comment_with_attachments) { FactoryGirl.create :comment_with_attachments, user: user }
   let(:other_user) { FactoryGirl.create(:user_with_comments) }
   let(:other_comment) { other_user.comments.first }
 
@@ -17,6 +18,31 @@ RSpec.describe "Comments Update API", type: :request do
 
         expect(response.status).to eq 200
         expect_json(content: "New content")
+        expect_json_types comment_json
+      end
+
+      it 'can remove attachments' do
+        v1_auth_patch user, comment_path(comment_with_attachments), params: { comment: { attachments: [nil] } }
+
+        expect(response.status).to eq 200
+        expect(json['attachments']).to be_empty
+        expect_json_types comment_json
+      end
+
+      it 'can add more attachments' do
+        attachments = [
+          comment_with_attachments.attachments.first,
+          comment_with_attachments.attachments.second,
+          Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, 'spec/support/images/user.png')))
+        ]
+
+        v1_auth_patch user, comment_path(comment_with_attachments), params: { comment: { attachments: attachments } }
+
+        expect(response.status).to eq 200
+        expect(json['attachments'].count).to eq 3
+        expect(json['attachments'][0]).not_to eq nil
+        expect(json['attachments'][1]).not_to eq nil
+        expect(json['attachments'][2]).not_to eq nil
         expect_json_types comment_json
       end
 

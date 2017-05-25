@@ -35,7 +35,7 @@ module V1
     private
 
     def comment_params
-      params.require(:comment).permit(:content)
+      params.require(:comment).permit(:content, {attachments: []})
     end
 
     def set_comment

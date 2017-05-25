@@ -4,6 +4,8 @@ class Comment < ApplicationRecord
 
   validates :content, presence: true
 
+  mount_uploaders :attachments, AttachmentUploader
+
   alias_method :author, :user
   alias_method :owner, :user
 

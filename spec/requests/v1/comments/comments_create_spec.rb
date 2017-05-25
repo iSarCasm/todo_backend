@@ -7,7 +7,15 @@ RSpec.describe "Comments Create API", type: :request do
 
   context 'when logged in' do
     context 'with valid params' do
-      before { @comment_params = { content: "Some comment about something" } }
+      before do
+        @comment_params = {
+          content: "Some comment about something",
+          attachments: [
+            fixture_file_upload(File.open(File.join(Rails.root, 'spec/support/images/user.png'))),
+            fixture_file_upload(File.open(File.join(Rails.root, 'spec/support/images/user.png')))
+          ]
+        }
+      end
 
       it 'creates a new comment' do
         v1_auth_post user,
@@ -16,6 +24,9 @@ RSpec.describe "Comments Create API", type: :request do
 
         expect(response.status).to eq 200
         expect_json(content: "Some comment about something")
+        expect(json['attachments'].count).to eq 2
+        expect(json['attachments'][0]).not_to eq nil
+        expect(json['attachments'][1]).not_to eq nil
         expect_json_types comment_json
       end
 

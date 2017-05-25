@@ -32,7 +32,8 @@ module V1
 
     def comment_json
       {
-        content: :string
+        content: :string,
+        attachments: :array_of_objects
       }
     end
 
