@@ -1,6 +1,7 @@
 class Project < ApplicationRecord
   belongs_to :user
   has_many :tasks, dependent: :destroy
+  has_one :shared_project, dependent: :destroy
 
   include AASM
   aasm do
@@ -14,5 +15,9 @@ class Project < ApplicationRecord
     event :activate do
       transitions from: :in_acrhived, to: :in_active
     end
+  end
+
+  def shared?
+    shared_project.nil?
   end
 end
