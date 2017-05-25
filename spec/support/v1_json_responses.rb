@@ -5,7 +5,8 @@ module V1
         uid: :string,
         name: :string,
         email: :string,
-        projects: :array_of_objects
+        projects: :array_of_objects,
+        avatar: :string
       }
     end
 

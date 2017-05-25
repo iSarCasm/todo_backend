@@ -13,8 +13,18 @@ FactoryGirl.define do
     end
 
     factory :user_with_comments do
-      after(:create) do |user, evaluator|
+      after(:create) do |user|
         create_list(:comment, 3, user: user)
+      end
+    end
+
+    factory :user_with_image do
+      transient do
+        file_path File.join(Rails.root, 'spec/support/images/user.png')
+      end
+
+      avatar do
+        Rack::Test::UploadedFile.new(File.open(file_path))
       end
     end
   end

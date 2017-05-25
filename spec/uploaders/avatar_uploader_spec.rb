@@ -8,7 +8,7 @@ describe AvatarUploader do
 
   before do
     AvatarUploader.enable_processing = true
-    File.open("#{Rails.root}/spec/support/images/default.png") { |f| uploader.store!(f) }
+    File.open("#{Rails.root}/spec/support/images/user.png") { |f| uploader.store!(f) }
   end
 
   after do

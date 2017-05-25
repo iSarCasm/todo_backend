@@ -9,12 +9,20 @@ RSpec.describe "Users API", type: :request do
         v1_auth_get user, user_path(user.name)
 
         expect(response.status).to eq 200
-
         expect_json(uid: user.uid, name: user.name, email: user.email)
         expect_json_types(user_json)
         expect_json_types('projects.*', project_json)
         expect_json_types('projects.*.tasks.*', task_json)
         expect_json_types('projects.*.tasks.*.comments.*', comment_json)
+      end
+
+      it 'returns the user with valid avatar url' do
+        user_with_avatar = FactoryGirl.create :user_with_image
+
+        v1_auth_get user_with_avatar, user_path(user_with_avatar)
+
+        expect(response.status).to eq 200
+        expect(json['avatar']).not_to be_nil
       end
     end
 
