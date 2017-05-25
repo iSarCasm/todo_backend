@@ -10,5 +10,20 @@ RSpec.describe SharedProject, type: :model do
 
   it { should validate_uniqueness_of :url }
 
+  it 'validates uniqueness of project_id' do
+    project_1 = FactoryGirl.create :project
+    FactoryGirl.create :shared_project, project: project_1
+
+    expect{SharedProject.create!(project: project_1)}.to raise_error{ActiveRecord::RecordInvalid}
+  end
+
   it { should belong_to :project }
+
+  describe 'before_save:' do
+    it 'sets @url' do
+      project = FactoryGirl.create :project
+      shared_project = SharedProject.create!(project: project)
+      expect(shared_project.url).not_to be nil
+    end
+  end
 end

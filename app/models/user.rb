@@ -15,4 +15,8 @@ class User < ActiveRecord::Base
   def tasks
     Task.joins(:project).where(projects: {user_id: id})
   end
+
+  def shared_projects
+    SharedProject.joins(:project).where(projects: {user_id: id})
+  end
 end

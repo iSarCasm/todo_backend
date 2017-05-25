@@ -9,5 +9,11 @@ FactoryGirl.define do
         create_list(:task_with_comments, 3, project: project)
       end
     end
+
+    factory :project_shared do
+      after(:build) do |project, evaluator|
+        create :shared_project, project: project
+      end
+    end
   end
 end

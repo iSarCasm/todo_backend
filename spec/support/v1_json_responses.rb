@@ -45,5 +45,12 @@ module V1
         comments: :integer
       }
     end
+
+    def shared_project_json
+      {
+        project_id: :integer,
+        url: :string
+      }
+    end
   end
 end

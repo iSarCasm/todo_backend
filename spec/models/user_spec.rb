@@ -26,4 +26,13 @@ RSpec.describe User, type: :model do
       expect(user.tasks.count).to eq (user_tasks_1 + user_tasks_2).count
     end
   end
+
+  describe '#shared_projects' do
+    it 'returns all shared projects of this user' do
+      user = FactoryGirl.create :user
+      projects = FactoryGirl.create_list :project_shared, 3, user: user
+
+      expect(user.shared_projects.count).to eq projects.count
+    end
+  end
 end
