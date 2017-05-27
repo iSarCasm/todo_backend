@@ -36,6 +36,11 @@ RSpec.describe "Comments Create API", type: :request do
           expect_http_error 422
         end
 
+        it 'returns 422 if content length over 400 char' do
+          v1_auth_post user, comments_path, params: { task_id: task.id, comment: {content: 'a'*401} }
+          expect_http_error 422
+        end
+
         it 'returns 404 if invalid task id passed' do
           v1_auth_post user, comments_path, params: { task_id: -10, comment: @comment_params }
           expect_http_error 404

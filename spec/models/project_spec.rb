@@ -12,7 +12,7 @@ RSpec.describe Project, type: :model do
 
   it { should validate_presence_of :title }
   it { should validate_length_of(:title).is_at_most(80) }
-  
+
   it { should validate_length_of(:desc).is_at_most(300) }
 
   it { should belong_to :user }
@@ -22,4 +22,16 @@ RSpec.describe Project, type: :model do
   it { should have_state :in_active }
   it { should transition_from(:in_active).to(:in_acrhived).on_event(:archive) }
   it { should transition_from(:in_acrhived).to(:in_active).on_event(:activate) }
+
+  describe '#shared?' do
+    it 'returns TRUE if exists shared_project for this project' do
+      project = FactoryGirl.create :project_shared
+      expect(project.shared?).to eq true
+    end
+
+    it 'returns FALSE if no shared_project exists for this project' do
+      project = FactoryGirl.create :project
+      expect(project.shared?).to eq false
+    end
+  end
 end

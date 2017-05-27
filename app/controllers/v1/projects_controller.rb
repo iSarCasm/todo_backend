@@ -8,7 +8,7 @@ module V1
     description "Creates a new project for current user"
     param :project, Hash, desc: 'Project info' do
       param :title, String, desc: 'Title of new project (max length is 80)', required: true
-      param :desc, String, desc: 'Project description'
+      param :desc, String, desc: 'Project description (max length is 300)'
     end
     example '{"id"=>7, "title"=>"New project", "desc"=>"Some long desc", "in_active"=>true, "tasks"=>[]}'
     def create

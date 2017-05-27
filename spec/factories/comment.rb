@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :comment do
-    content { Faker::Hipster.paragraph }
+    content { Faker::Hipster.paragraph.first(400) }
     task
     user
 

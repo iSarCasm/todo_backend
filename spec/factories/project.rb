@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :project do
     title { Faker::Hipster.words(3).join(" ") }
-    desc  { Faker::Hipster.paragraph }
+    desc  { Faker::Hipster.paragraph.first(300) }
     user
 
     factory :project_with_tasks do

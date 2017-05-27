@@ -27,8 +27,18 @@ RSpec.describe "Projects Update API", type: :request do
     end
 
     context 'with invalid params' do
-      it 'fails to update the project' do
+      it 'fails to update the project (no params)' do
         v1_auth_patch user, project_path(user.projects.first)
+        expect_http_error 422
+      end
+
+      it 'fails to create a new project (title over 80 chars)' do
+        v1_auth_patch user, project_path(user.projects.first), params: { project: {title: 'a' * 81} }
+        expect_http_error 422
+      end
+
+      it 'fails to create a new project (desc over 300 chars)' do
+        v1_auth_patch user, project_path(user.projects.first), params: { project: {title: 'title', desc: 'a' * 301} }
         expect_http_error 422
       end
     end

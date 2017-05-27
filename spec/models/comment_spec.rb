@@ -6,6 +6,7 @@ RSpec.describe Comment, type: :model do
   it { should respond_to :content }
 
   it { should validate_presence_of :content }
+  it { should validate_length_of(:content).is_at_most(400) }
 
   it { should belong_to :user }
   it { should belong_to :task }

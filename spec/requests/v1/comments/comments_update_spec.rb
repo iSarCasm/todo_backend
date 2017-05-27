@@ -64,6 +64,11 @@ RSpec.describe "Comments Update API", type: :request do
         v1_auth_patch user, comment_path(comment)
         expect_http_error 422
       end
+
+      it 'fails if content length over 400 char' do
+        v1_auth_patch user, comment_path(comment), params: { comment: {content: 'a'*401} }
+        expect_http_error 422
+      end
     end
   end
 

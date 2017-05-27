@@ -13,6 +13,11 @@ RSpec.describe Task, type: :model do
   it { should respond_to :project }
   it { should respond_to :position }
 
+  it { should validate_presence_of :name }
+  it { should validate_length_of(:name).is_at_most(80) }
+
+  it { should validate_length_of(:desc).is_at_most(300) }
+
   it { should belong_to :project }
   it { should have_many(:comments).dependent(:destroy) }
 

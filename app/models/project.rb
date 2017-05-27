@@ -21,6 +21,6 @@ class Project < ApplicationRecord
   end
 
   def shared?
-    shared_project.nil?
+    !shared_project.nil?
   end
 end

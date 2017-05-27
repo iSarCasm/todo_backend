@@ -2,6 +2,9 @@ class Task < ApplicationRecord
   belongs_to :project
   has_many :comments, dependent: :destroy
 
+  validates :name, presence: true, length: { maximum: 80 }
+  validates :desc, length: { maximum: 300 }
+
   before_save :set_default_position
   after_save :update_project_tasks_positions
 

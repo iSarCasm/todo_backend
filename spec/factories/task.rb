@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :task do
     name        { Faker::Hipster.word }
-    desc        { Faker::Hipster.paragraph }
+    desc        { Faker::Hipster.paragraph.first(300) }
     deadline    { Faker::Time.forward(23, :morning) }
     project
 

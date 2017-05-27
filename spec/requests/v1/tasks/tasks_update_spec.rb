@@ -38,6 +38,16 @@ RSpec.describe "Tasks Update API", type: :request do
         v1_auth_patch user, task_path(task)
         expect_http_error 422
       end
+
+      it 'fails to create a new task (name over 80 char)' do
+        v1_auth_patch user, task_path(task), params: { task: {name: 'a' * 81} }
+        expect_http_error 422
+      end
+
+      it 'fails to create a new task (desc over 300 char)' do
+        v1_auth_patch user, task_path(task), params: { task: {name: 'a', desc: 'a' * 301} }
+        expect_http_error 422
+      end
     end
   end
 
