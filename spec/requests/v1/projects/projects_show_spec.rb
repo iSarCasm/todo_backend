@@ -7,7 +7,7 @@ RSpec.describe "Projects Show API", type: :request do
   context 'when logged in' do
     it 'returns the project with list of tasks' do
       v1_auth_get user, project_path(user.projects.first)
-
+      
       expect(response.status).to eq 200
       expect_json_types project_json
       expect_json_types 'tasks.*', task_json

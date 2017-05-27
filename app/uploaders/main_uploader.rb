@@ -14,7 +14,6 @@ class MainUploader < CarrierWave::Uploader::Base
   end
 
   def secure_file_token(length=16)
-    var = :"@#{mounted_as}_secure_file_token"
-    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.hex(length/2))
+    SecureRandom.hex(length/2)
   end
 end

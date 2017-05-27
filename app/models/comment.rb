@@ -12,4 +12,8 @@ class Comment < ApplicationRecord
   def task_owner
     task.owner
   end
+
+  def project
+    task.project
+  end
 end

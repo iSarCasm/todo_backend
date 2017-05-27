@@ -10,5 +10,9 @@ FactoryGirl.define do
         create_list(:comment, 3, task: task)
       end
     end
+
+    factory :task_shared do
+      project { FactoryGirl.create :project_shared }
+    end
   end
 end

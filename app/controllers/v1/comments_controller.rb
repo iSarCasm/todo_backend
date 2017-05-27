@@ -4,18 +4,55 @@ module V1
     before_action :set_comment, except: [:create]
     authorize_resource
 
+    api! 'Create a new comment'
+    description 'Creates a new comment under a given task. Can be created under current user`s task or shared projects`s task.'
+    param :task_id, Fixnum, desc: 'Task id'
+    param :comment, Hash, desc: 'Comment info' do
+      param :content, String, desc: 'Comment text'
+      param :attachments, Array, desc: 'Array of images (or other files) to attach'
+    end
+    example <<~EOS
+      REQUEST:
+       {
+         "task_id"=>"1",
+         "comment"=>{
+           "content"=>"Some comment about something",
+           "attachments"=>[ %file_1%, ... ]
+         }
+       }
+      RESPONSE:
+      {
+        "id"=>28,
+        "content"=>"Some comment about something",
+        "attachments"=>[
+          {"url"=>"/uploads/comment/attachments/59e19706/bd4aeee8f7.png"},
+          {"url"=>"/uploads/comment/attachments/59e19706/d373f5d53b.png"}
+        ]
+      }
+    EOS
     def create
       @comment = get_task.comments.create(comment_params)
+      authorize! :create, @comment
       @comment.user = current_user
       @comment.save!
       render @comment
     end
 
+    api! 'Update comment'
+    description 'Update comment with new information. Returns comment object upon success.'
+    param :id, Fixnum, desc: 'Comment id', required: true
+    param :comment, Hash, desc: 'Comment info' do
+      param :content, String, desc: 'Comment text', required: true
+      param :attachments, Array, desc: 'Array of images (or other files) to attach'
+    end
     def update
       @comment.update!(comment_params)
       render @comment
     end
 
+    api! 'Delete comment'
+    description 'Deltes a given comment. Has to be owned by current user or placed under user`s project. Returns comment object upon success.'
+    param :id, Fixnum, desc: 'Comment id', required: true
     def destroy
       @comment.destroy!
       render @comment
@@ -32,7 +69,7 @@ module V1
     end
 
     def get_task
-      current_user.tasks.find(params[:task_id])
+      Task.find(params[:task_id])
     end
   end
 end

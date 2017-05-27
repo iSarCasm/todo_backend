@@ -19,6 +19,14 @@ RSpec.describe SharedProject, type: :model do
 
   it { should belong_to :project }
 
+  describe '#user' do
+    it 'returns project owner' do
+      project = FactoryGirl.create :project
+      shared_project = SharedProject.create!(project: project)
+      expect(shared_project.user).to eq project.user
+    end
+  end
+
   describe 'before_save:' do
     it 'sets @url' do
       project = FactoryGirl.create :project

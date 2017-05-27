@@ -17,10 +17,22 @@ class Ability
 
   def user_ability(user)
     can :manage, User, id: user.id
-    can :manage, Project, user: user
-    can :manage, Task, owner: user
-    can :manage, Comment, user: user
+
+    can :manage, Project, user_id: user.id
+
+    can :manage, Task do |task|
+      task.owner == user
+    end
+
+    can :update, Comment, user_id: user.id
+    can [:create, :destroy], Comment do |comment|
+      comment.task_owner == user
+    end
+    can :create, Comment do |comment|
+      comment.project.shared?
+    end
+    can :destroy, Comment, user_id: user.id
+
     can :manage, SharedProject, user: user
-    can :destroy, Comment, task_owner: user
   end
 end

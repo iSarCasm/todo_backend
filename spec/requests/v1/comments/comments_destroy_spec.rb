@@ -13,9 +13,9 @@ RSpec.describe "Comments Destroy API", type: :request do
       comment = FactoryGirl.create :comment, user: user
       v1_auth_delete user, comment_path(comment)
 
-      expect(Comment.exists?(comment.id)).to be_falsey
       expect(response.status).to eq 200
       expect_json_types comment_json
+      expect(Comment.exists?(comment.id)).to be_falsey
     end
 
     it 'returns 404 if wrong id given' do

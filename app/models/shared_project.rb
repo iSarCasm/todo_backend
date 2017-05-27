@@ -6,6 +6,10 @@ class SharedProject < ApplicationRecord
 
   before_save :set_url
 
+  def user
+    project.user
+  end
+
   private
 
   def set_url

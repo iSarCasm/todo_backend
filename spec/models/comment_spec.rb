@@ -21,6 +21,16 @@ RSpec.describe Comment, type: :model do
     end
   end
 
+  describe '#project' do
+    it 'returns parent project of comment`s task' do
+      project = FactoryGirl.create :project
+      task = FactoryGirl.create :task, project: project
+      comment = FactoryGirl.create :comment, task: task
+
+      expect(comment.project).to eq project
+    end
+  end
+
   describe '#owner, #author' do
     it 'returns comment owner' do
       user = FactoryGirl.create :user

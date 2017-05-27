@@ -7,13 +7,13 @@ RSpec.describe "Tasks Create API", type: :request do
   context 'when logged in' do
     context 'with valid params' do
       it 'creates a new task' do
-        time = DateTime.now.to_s
+        time = DateTime.now.strftime("%Y-%m-%d")
         task_params = { name: "New task", desc: "Some long description", deadline: time }
 
         v1_auth_post user,
                   tasks_path,
                   params: { project_id: user.projects.first.id, task: task_params}
-
+        
         expect(response.status).to eq 200
         expect_json(name: "New task", desc: "Some long description", deadline: time)
         expect_json_types task_json

@@ -25,7 +25,7 @@ RSpec.describe "Shared Projects Create API", type: :request do
 
   it 'can successfuly create shared project' do
     v1_auth_post user, shared_projects_path, params: { project_id: project.id }
-
+    
     expect(response.status).to eq 200
     expect_json_types shared_project_json
   end

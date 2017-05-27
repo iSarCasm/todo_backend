@@ -4,6 +4,7 @@ RSpec.describe "Comments Create API", type: :request do
   let(:user) { FactoryGirl.create :user_with_projects }
   let(:task) { user.tasks.first }
   let(:other_task) {  FactoryGirl.create :task }
+  let(:shared_task) { FactoryGirl.create :task_shared }
 
   context 'when logged in' do
     context 'with valid params' do
@@ -48,9 +49,16 @@ RSpec.describe "Comments Create API", type: :request do
       end
 
       context 'adding to other user`s task' do
-        it 'returns 404: Forbidden when accessing others task' do
+        it 'returns 403: Forbidden when accessing others task' do
           v1_auth_post user, comments_path, params: { task_id: other_task.id, comment: @comment_params }
-          expect_http_error 404
+          expect_http_error 403
+        end
+
+        it 'is allowed if task project is shared' do
+          v1_auth_post user, comments_path, params: { task_id: shared_task.id, comment: @comment_params }
+
+          expect(response.status).to eq 200
+          expect_json_types comment_json
         end
       end
     end
