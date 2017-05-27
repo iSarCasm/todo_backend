@@ -4,6 +4,13 @@ module V1
     before_action :set_project, except: [:create]
     authorize_resource
 
+    api! "Create a new project for current user"
+    description "Creates a new project for current user"
+    param :project, Hash, desc: 'Project info' do
+      param :title, String, desc: 'Title of new project (max length is 80)', required: true
+      param :desc, String, desc: 'Project description'
+    end
+    example '{"id"=>7, "title"=>"New project", "desc"=>"Some long desc", "in_active"=>true, "tasks"=>[]}'
     def create
       @project = current_user.projects.create!(project_params)
       render @project

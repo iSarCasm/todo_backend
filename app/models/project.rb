@@ -3,6 +3,9 @@ class Project < ApplicationRecord
   has_many :tasks, dependent: :destroy
   has_one :shared_project, dependent: :destroy
 
+  validates :title, presence: true, length: { maximum: 80 }
+  validates :desc, length: { maximum: 300 }
+
   include AASM
   aasm do
     state :in_active, initial: true

@@ -10,6 +10,11 @@ RSpec.describe Project, type: :model do
   it { should respond_to :shared_project }
   it { should respond_to :shared? }
 
+  it { should validate_presence_of :title }
+  it { should validate_length_of(:title).is_at_most(80) }
+  
+  it { should validate_length_of(:desc).is_at_most(300) }
+
   it { should belong_to :user }
   it { should have_many(:tasks).dependent(:destroy) }
   it { should have_one(:shared_project).dependent(:destroy) }

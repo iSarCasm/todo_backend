@@ -7,7 +7,7 @@ RSpec.describe "Users API", type: :request do
     context 'when logged in' do
       it 'returns the user with list of projects' do
         v1_auth_get user, user_path(user.name)
-
+        
         expect(response.status).to eq 200
         expect_json(uid: user.uid, name: user.name, email: user.email)
         expect_json_types(user_json)
