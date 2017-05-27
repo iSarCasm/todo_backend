@@ -4,17 +4,6 @@ module V1
     before_action :set_project, only: [:create]
     authorize_resource
 
-    api! 'Show shared project'
-    description 'Shows full information about project. Accessed through shared link to any user on internet.'
-    param :url, String, desc: 'shared URL', required: true
-    example <<~EOS
-      RESPONSE:
-      {"project_id"=>2, "url"=>"da2f3f41346bf94c8b48acecb3a25442f59d4a7b"}
-    EOS
-    def show
-      @shared_project = SharedProject.find_by!(url: params[:url])
-    end
-
     api! 'Create a shared project'
     description <<~EOS
       Create a shared link for a project. It will make current project and its tasks/comments available for a view to any
@@ -31,6 +20,23 @@ module V1
     def create
       @shared_project = SharedProject.create!(project: @project)
       render @shared_project
+    end
+
+    api! 'Show shared project'
+    description 'Shows full information about project. Accessed through shared link to any user on internet.'
+    param :url, String, desc: 'shared URL', required: true
+    example <<~EOS
+      RESPONSE:
+      {
+        "id"=>7,
+        "title"=>"New project",
+        "desc"=>"Some long desc",
+        "in_active"=>true,
+        "tasks"=>[]
+      }
+    EOS
+    def show
+      @shared_project = SharedProject.find_by!(url: params[:url])
     end
 
     api! 'Destroy shared porject'
