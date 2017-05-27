@@ -9,8 +9,6 @@ module V1
       @comment.user = current_user
       @comment.save!
       render @comment
-    rescue ActiveRecord::RecordNotFound
-      render_error 404
     end
 
     def update
@@ -31,8 +29,6 @@ module V1
 
     def set_comment
       @comment = Comment.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render_error 404
     end
 
     def get_task

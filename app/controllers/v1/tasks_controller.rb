@@ -7,8 +7,6 @@ module V1
     def create
       @task = get_project.tasks.create!(task_params)
       render @task
-    rescue ActiveRecord::RecordNotFound
-      render_error 404
     end
 
     def update
@@ -39,8 +37,6 @@ module V1
 
     def set_task
       @task = current_user.tasks.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render_error 404
     end
 
     def get_project

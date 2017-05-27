@@ -40,8 +40,6 @@ module V1
 
     def set_project
       @project = current_user.projects.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render_error 404
     end
   end
 end
