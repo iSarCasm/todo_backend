@@ -2,6 +2,7 @@ module V1
   class SharedProjectsController < ApplicationController
     before_action :authenticate_user!, except: [:show]
     before_action :set_project, only: [:create]
+    authorize_resource
 
     def show
       @shared_project = SharedProject.find_by!(project_id: params[:project_id])

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Stats API", type: :request do
   describe '#index' do
-    it 'returns the user with list of projects' do
+    it 'returns web-site`s stats' do
       FactoryGirl.create :user_with_projects
 
       v1_get stats_path

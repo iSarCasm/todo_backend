@@ -2,6 +2,7 @@ module V1
   class ProjectsController < ApplicationController
     before_action :authenticate_user!
     before_action :set_project, except: [:create]
+    authorize_resource
 
     def create
       @project = current_user.projects.create!(project_params)

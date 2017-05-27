@@ -2,6 +2,7 @@ module V1
   class CommentsController < ApplicationController
     before_action :authenticate_user!
     before_action :set_comment, except: [:create]
+    authorize_resource
 
     def create
       @comment = get_task.comments.create(comment_params)
@@ -26,12 +27,8 @@ module V1
     end
 
     def destroy
-      if @comment.owner == current_user || @comment.task_owner == current_user
-        @comment.destroy!
-        render @comment
-      else
-        render_error 403, resource: 'comment'
-      end
+      @comment.destroy!
+      render @comment
     end
 
     private

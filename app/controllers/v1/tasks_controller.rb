@@ -2,6 +2,7 @@ module V1
   class TasksController < ApplicationController
     before_action :authenticate_user!
     before_action :set_task, except: [:create]
+    authorize_resource
 
     def create
       @task = get_project.tasks.create!(task_params)
