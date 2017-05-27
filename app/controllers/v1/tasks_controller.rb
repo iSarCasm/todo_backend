@@ -7,8 +7,6 @@ module V1
     def create
       @task = get_project.tasks.create!(task_params)
       render @task
-    rescue ActionController::ParameterMissing
-      render_error 422
     rescue ActiveRecord::RecordNotFound
       render_error 404
     end
@@ -16,8 +14,6 @@ module V1
     def update
       @task.update!(task_params)
       render @task
-    rescue ActionController::ParameterMissing
-      render_error 422
     end
 
     def destroy

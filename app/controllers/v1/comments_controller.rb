@@ -9,21 +9,13 @@ module V1
       @comment.user = current_user
       @comment.save!
       render @comment
-    rescue ActionController::ParameterMissing
-      render_error 422
     rescue ActiveRecord::RecordNotFound
       render_error 404
     end
 
     def update
-      if @comment.owner == current_user
-        @comment.update!(comment_params)
-        render @comment
-      else
-        render_error 403, resource: 'comment'
-      end
-    rescue ActionController::ParameterMissing
-      render_error 422
+      @comment.update!(comment_params)
+      render @comment
     end
 
     def destroy

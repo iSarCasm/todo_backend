@@ -7,8 +7,6 @@ module V1
     def create
       @project = current_user.projects.create!(project_params)
       render @project
-    rescue ActionController::ParameterMissing
-      render_error 422
     end
 
     def show
@@ -17,8 +15,6 @@ module V1
     def update
       @project.update!(project_params)
       render @project
-    rescue ActionController::ParameterMissing
-      render_error 422
     end
 
     def destroy
