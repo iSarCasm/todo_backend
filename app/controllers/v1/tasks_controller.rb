@@ -13,6 +13,8 @@ module V1
       param :deadline, String, desc: 'Time when needed to finish the project'
       param :position, Fixnum, desc: 'Task position relative to other projects under this task (auto set to highest)'
     end
+    error 401, 'Unauthorized'
+    error 422, 'Parameter missing'
     example <<~EOS
       REQUEST:
       {
@@ -48,6 +50,8 @@ module V1
       param :deadline, String, desc: 'Time when needed to finish the project'
       param :position, Fixnum, desc: 'Task position relative to other projects under this task (auto set to highest)'
     end
+    error 401, 'Unauthorized'
+    error 422, 'Parameter missing'
     see 'tasks#create', 'tasks#create'
     def update
       @task.update!(task_params)
@@ -57,6 +61,8 @@ module V1
     api! 'Finish task'
     description 'Marks given task as finished. Returns updated task object upon success.'
     param :id, Fixnum, desc: 'Task id', required: true
+    error 401, 'Unauthorized'
+    error 404, 'Not found'
     def finish
       @task.finish!
       render @task
@@ -65,6 +71,8 @@ module V1
     api! 'To progress task'
     description 'Marks given task as `in progress`. Returns updated task object upon success.'
     param :id, Fixnum, desc: 'Task id', required: true
+    error 401, 'Unauthorized'
+    error 404, 'Not found'
     def to_progress
       @task.to_progress!
       render @task
@@ -73,6 +81,8 @@ module V1
     api! "Delete task"
     description "Delete given task. Task has to be owned by current user. Returns task object upon success."
     param :id, Fixnum, desc: 'Task id', required: true
+    error 401, 'Unauthorized'
+    error 404, 'Not found'
     def destroy
       @task.destroy!
       render @task

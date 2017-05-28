@@ -11,6 +11,8 @@ module V1
       param :content, String, desc: 'Comment text'
       param :attachments, Array, desc: 'Array of images (or other files) to attach'
     end
+    error 401, 'Unauthorized'
+    error 422, 'Parameter missing'
     example <<~EOS
       REQUEST:
        {
@@ -45,6 +47,8 @@ module V1
       param :content, String, desc: 'Comment text', required: true
       param :attachments, Array, desc: 'Array of images (or other files) to attach'
     end
+    error 401, 'Unauthorized'
+    error 422, 'Parameter missing'
     def update
       @comment.update!(comment_params)
       render @comment
@@ -53,6 +57,8 @@ module V1
     api! 'Delete comment'
     description 'Deltes a given comment. Has to be owned by current user or placed under user`s project. Returns comment object upon success.'
     param :id, Fixnum, desc: 'Comment id', required: true
+    error 401, 'Unauthorized'
+    error 404, 'Not found'
     def destroy
       @comment.destroy!
       render @comment

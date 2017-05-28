@@ -17,6 +17,8 @@ module V1
     EOS
     param :project_id, Fixnum, desc: 'Project id', required: true
     see 'shared_projects#show', 'shared_projects#show'
+    error 401, 'Unauthorized'
+    error 422, 'Parameter missing'
     def create
       @shared_project = SharedProject.create!(project: @project)
       render @shared_project
@@ -25,6 +27,7 @@ module V1
     api! 'Show shared project'
     description 'Shows full information about project. Accessed through shared link to any user on internet.'
     param :url, String, desc: 'shared URL', required: true
+    error 404, 'Not found'
     example <<~EOS
       RESPONSE:
       {
@@ -43,6 +46,8 @@ module V1
     description 'Destroy shared project link. Has to be owned by current user. Returns shared project upon success.'
     param :url, String, desc: 'shared URL', required: true
     see 'shared_projects#show', 'shared_projects#show'
+    error 401, 'Unauthorized'
+    error 404, 'Not found'
     def destroy
       @shared_project = current_user.shared_projects.find_by!(url: params[:url])
       @shared_project.destroy!

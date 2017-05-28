@@ -10,6 +10,8 @@ module V1
       param :title, String, desc: 'Title of new project (max length is 80)', required: true
       param :desc, String, desc: 'Project description (max length is 300)'
     end
+    error 401, 'Unauthorized'
+    error 422, 'Parameter missing'
     example <<~EOS
       REQUEST:
       {
@@ -36,6 +38,8 @@ module V1
     description 'Returns all project information including tasks and their comments'
     param :id, Fixnum, required: true
     example '{"id"=>7, "title"=>"New project", "desc"=>"Some long desc", "in_active"=>true, "tasks"=>[]}'
+    error 404, 'Not found'
+    error 401, 'Unauthorized'
     def show
     end
 
@@ -46,6 +50,8 @@ module V1
       param :title, String, desc: 'Title of new project (max length is 80)'
       param :desc, String, desc: 'Project description (max length is 300)'
     end
+    error 401, 'Unauthorized'
+    error 422, 'Parameter missing'
     see 'projects#create', "projects#create"
     def update
       @project.update!(project_params)
@@ -55,6 +61,8 @@ module V1
     api! "Archive project"
     description 'Put project into archived category. Returns updated project object upon successful update'
     param :id, Fixnum, required: true
+    error 404, 'Not found'
+    error 401, 'Unauthorized'
     see 'projects#show', "projects#show"
     see 'projects#create', "projects#create"
     def archive
@@ -65,6 +73,8 @@ module V1
     api! "Activate project"
     description 'Put project into active category. Returns updated project object upon successful update'
     param :id, Fixnum, required: true
+    error 404, 'Not found'
+    error 401, 'Unauthorized'
     see 'projects#show', "projects#show"
     see 'projects#create', "projects#create"
     def activate
@@ -75,6 +85,8 @@ module V1
     api! "Delete project"
     description 'Update project attributes with new values. Returns updated project object upon successful destoy'
     param :id, Fixnum, required: true
+    error 404, 'Not found'
+    error 401, 'Unauthorized'
     see 'projects#show', "projects#show"
     see 'projects#create', "projects#create"
     def destroy
