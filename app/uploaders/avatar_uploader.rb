@@ -3,7 +3,7 @@ class AvatarUploader < MainUploader
 
   storage :file
 
-  def default_url(*args)
+  def default_url(*)
     "/uploads/#{model.class.to_s.underscore}/fallback/default.png"
   end
 
