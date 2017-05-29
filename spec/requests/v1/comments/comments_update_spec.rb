@@ -29,23 +29,6 @@ RSpec.describe "Comments Update API", type: :request do
         expect_json_types comment_json
       end
 
-      it 'can add more attachments' do
-        attachments = [
-          comment_with_attachments.attachments.first,
-          comment_with_attachments.attachments.second,
-          Rack::Test::UploadedFile.new(File.open(File.join(Rails.root, 'spec/support/images/user.png')))
-        ]
-
-        v1_auth_patch user, comment_path(comment_with_attachments), params: { comment: { attachments: attachments } }
-
-        expect(response.status).to eq 200
-        expect(json['attachments'].count).to eq 3
-        expect(json['attachments'][0]).not_to eq nil
-        expect(json['attachments'][1]).not_to eq nil
-        expect(json['attachments'][2]).not_to eq nil
-        expect_json_types comment_json
-      end
-
       it 'returns 404 if wrong id given' do
         v1_auth_patch user, comment_path(-10), params: { comment: @comment_params  }
         expect_http_error 404

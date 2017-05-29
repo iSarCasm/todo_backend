@@ -37,8 +37,10 @@ module V1
       {
         id: :integer,
         task_id: :integer,
+        user_name: :string,
+        user_avatar: :string,
         content: :string,
-        attachments: :array_of_objects
+        attachments: :array_of_strings
       }
     end
 

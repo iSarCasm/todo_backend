@@ -1,0 +1,15 @@
+
+[1mFrom:[0m /home/sarcasm/study/todo_backend/spec/requests/v1/comments/comments_update_spec.rb @ line 43 :
+
+    [1;34m38[0m: 
+    [1;34m39[0m:         v1_auth_patch user, comment_path(comment_with_attachments), [35mparams[0m: { [35mcomment[0m: { [35mattachments[0m: attachments } }
+    [1;34m40[0m: 
+    [1;34m41[0m:         expect(response.status).to eq [1;34m200[0m
+    [1;34m42[0m:         binding.pry
+ => [1;34m43[0m:         expect(json[[31m[1;31m'[0m[31mattachments[1;31m'[0m[31m[0m].count).to eq [1;34m3[0m
+    [1;34m44[0m:         expect(json[[31m[1;31m'[0m[31mattachments[1;31m'[0m[31m[0m][[1;34m0[0m]).not_to eq [1;36mnil[0m
+    [1;34m45[0m:         expect(json[[31m[1;31m'[0m[31mattachments[1;31m'[0m[31m[0m][[1;34m1[0m]).not_to eq [1;36mnil[0m
+    [1;34m46[0m:         expect(json[[31m[1;31m'[0m[31mattachments[1;31m'[0m[31m[0m][[1;34m2[0m]).not_to eq [1;36mnil[0m
+    [1;34m47[0m:         expect_json_types comment_json
+    [1;34m48[0m:       [32mend[0m
+

@@ -26,10 +26,12 @@ module V1
       {
         "id"=>28,
         "task_id"=>1,
+        "user_name"=>"Chris",
+        "user_avatar"=>"/uploads/comment/attachments/59e19706/bd4aeee8f7.png",
         "content"=>"Some comment about something",
         "attachments"=>[
-          {"url"=>"/uploads/comment/attachments/59e19706/bd4aeee8f7.png"},
-          {"url"=>"/uploads/comment/attachments/59e19706/d373f5d53b.png"}
+          "/uploads/comment/attachments/59e19706/bd4aeee8f7.png",
+          "/uploads/comment/attachments/59e19706/d373f5d53b.png"
         ]
       }
     EOS
