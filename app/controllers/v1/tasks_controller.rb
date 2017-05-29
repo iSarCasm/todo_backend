@@ -27,7 +27,8 @@ module V1
       }
       RESPONSE:
       {
-        "id"=>55,
+         "id"=>55,
+         "project_id"=>16,
          "name"=>"New task",
          "desc"=>"Some long description",
          "deadline"=>"2017-05-28",

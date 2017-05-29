@@ -1,4 +1,5 @@
 json.id task.id
+json.project_id task.project_id
 json.name task.name
 json.desc task.desc
 json.deadline task.deadline

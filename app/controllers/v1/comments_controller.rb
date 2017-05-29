@@ -25,6 +25,7 @@ module V1
       RESPONSE:
       {
         "id"=>28,
+        "task_id"=>1,
         "content"=>"Some comment about something",
         "attachments"=>[
           {"url"=>"/uploads/comment/attachments/59e19706/bd4aeee8f7.png"},
