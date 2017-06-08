@@ -23,4 +23,8 @@ class Project < ApplicationRecord
   def shared?
     !shared_project.nil?
   end
+
+  def shared_url
+    shared_project ? shared_project.url : nil
+  end
 end

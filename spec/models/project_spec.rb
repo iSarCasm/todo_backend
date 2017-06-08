@@ -34,4 +34,16 @@ RSpec.describe Project, type: :model do
       expect(project.shared?).to eq false
     end
   end
+
+  describe '#shared_url' do
+    it 'returns url to shared view of the project' do
+      project = FactoryGirl.create :project_shared
+      expect(project.shared_url).to eq SharedProject.find_by(project_id: project.id).url
+    end
+
+    it 'returns nil if not shared' do
+      project = FactoryGirl.create :project
+      expect(project.shared_url).to eq nil
+    end
+  end
 end

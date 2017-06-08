@@ -16,7 +16,7 @@ module V1
         title: :string,
         desc: :string,
         tasks: :array_of_objects,
-        in_active: :boolean
+        in_active: :boolean,
       }
     end
 
